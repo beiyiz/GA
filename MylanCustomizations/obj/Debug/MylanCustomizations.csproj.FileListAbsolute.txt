@@ -1,0 +1,35 @@
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\obj\Debug\MylanCustomizations.csprojResolveAssemblyReference.cache
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\MylanCustomizations.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\MylanCustomizations.pdb
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Sitecore.Client.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Sitecore.Kernel.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Sitecore.Logging.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Telerik.Web.UI.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Lucene.Net.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\ComponentArt.Web.UI.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Stimulsoft.Report.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Stimulsoft.Report.Web.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Sitecore.Analytics.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\HtmlAgilityPack.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Stimulsoft.Report.WebDesign.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Newtonsoft.Json.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Sitecore.NVelocity.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\ITHit.WebDAV.Server.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Mvp.Xml.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Sitecore.Zip.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\RadEditor.Net2.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\RadSpell.Net2.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Stimulsoft.Base.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Sitecore.Client.xml
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Sitecore.Kernel.xml
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\bin\Debug\Telerik.Web.UI.xml
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\obj\Debug\MylanCustomizations.dll
+C:\Mylan\Mylan Institutional Products\MylanCustomizations\obj\Debug\MylanCustomizations.pdb
+C:\Mylan\Mylan Institutional Products\www\Web\bin\MylanCustomizations.dll
+C:\Mylan\Mylan Institutional Products\www\Web\bin\MylanCustomizations.pdb
+C:\Users\danbeiyi\mylan-usproduct-listing\www\Web\bin\MylanCustomizations.dll
+C:\Users\danbeiyi\mylan-usproduct-listing\www\Web\bin\MylanCustomizations.pdb
+C:\Users\danbeiyi\mylan-usproduct-listing\MylanCustomizations\obj\Debug\MylanCustomizations.dll
+C:\Users\danbeiyi\mylan-usproduct-listing\MylanCustomizations\obj\Debug\MylanCustomizations.pdb
+C:\Users\danbeiyi\mylan-usproduct-listing\www\Web\bin\MylanCustomizations.dll.config
+C:\Users\danbeiyi\mylan-usproduct-listing\MylanCustomizations\obj\Debug\MylanCustomizations.csprojResolveAssemblyReference.cache
