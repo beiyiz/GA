@@ -25,6 +25,15 @@ namespace MylanCustomizations.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("beiyi.zheng@gmail.com")]
+        public string ApproverEmailAddress {
+            get {
+                return ((string)(this["ApproverEmailAddress"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3uqagf2nrt2mm27q3rt45ett")]
         public string ETClientId {
             get {

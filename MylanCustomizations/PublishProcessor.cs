@@ -7,94 +7,25 @@ using Sitecore.Publishing.Pipelines.PublishItem;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FuelSDK;
+
 using System.Collections.Specialized;
 using System.ServiceModel;
+using MylanCustomizations.ExactTargetClient;
 
 namespace MylanCustomizations
 {
     public class PublishProcessor : PublishItemProcessor
     {
-        private void CreateEmailSendDefination(Item item){
-            NameValueCollection parameters = new NameValueCollection();
-            parameters.Add("clientId", Properties.Settings.Default.ETClientId);
-            parameters.Add("clientSecret", Properties.Settings.Default.ETClientSecret);
-
-            try
-            {
-                ET_Client etClient = new ET_Client(parameters);
-                string newSendDefinitionName = "SitecoreItemUpdates" + item.ID.ToString();
-                string sendableDataExtensionCustomerKey = item.ID.ToString();
-                int emailIDForSendDefinition = 3113962;
-                int listIDForSendDefinition = 1729515;
-                string sendClassificationCustomerKey = "2239";
-                string tsNameForCreateThenDelete = Guid.NewGuid().ToString();
-
-                //Retrieve All TriggeredSend Definitions
-                ET_TriggeredSend tsdGetAll = new ET_TriggeredSend();
-                tsdGetAll.AuthStub = etClient;
-                tsdGetAll.Props = new string[] { "CustomerKey", "Name", "TriggeredSendStatus" };
-                tsdGetAll.SearchFilter = new SimpleFilterPart() { Property = "CustomerKey", SimpleOperator = SimpleOperators.equals, Value = new string[] { tsNameForCreateThenDelete } };
-                GetReturn grAllTSD = tsdGetAll.Get();
-
-                bool customKeyExists = false;
-                foreach (ET_TriggeredSend result in grAllTSD.Results)
-                {
-                    if (result.CustomerKey == sendableDataExtensionCustomerKey)
-                    {
-                        customKeyExists = true;
-                        break;
-                    }
-                }
-                if (!customKeyExists)
-                {
-                    //Create SendDefinition to DataExtension
-                    ET_EmailSendDefinition postESDDE = new ET_EmailSendDefinition();
-                    postESDDE.AuthStub = etClient;
-                    postESDDE.Name = newSendDefinitionName;
-                    postESDDE.CustomerKey = newSendDefinitionName;
-                    postESDDE.Description = "Sitecore Item updated or added";
-                    postESDDE.SendClassification = new ET_SendClassification() { CustomerKey = sendClassificationCustomerKey };
-                    postESDDE.SendDefinitionList = new ET_SendDefinitionList[] { new ET_SendDefinitionList() { CustomerKey = sendableDataExtensionCustomerKey, DataSourceTypeID = DataSourceTypeEnum.CustomObject } };
-                    postESDDE.Email = new ET_Email() { ID = emailIDForSendDefinition };
-                    PostReturn postResponse = postESDDE.Post();
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-                string msg = ex.Message + ex.Source + ex.StackTrace.ToString();
-            }   
-            
-        }
-        private void CreateTriggeredSendEmail(Item item)
-        {
-            NameValueCollection parameters = new NameValueCollection();
-            parameters.Add("clientId", Properties.Settings.Default.ETClientId);
-            parameters.Add("clientSecret", Properties.Settings.Default.ETClientSecret);
-
-            try
-            {
-                ET_Client etclient = new ET_Client(parameters);
-
-                ET_TriggeredSend tsdSend = new ET_TriggeredSend();
-                tsdSend.AuthStub = etclient;
-                tsdSend.CustomerKey = item.ID.ToString();
-                tsdSend.Subscribers = new ET_Subscriber[] { new ET_Subscriber() { EmailAddress = "beiyi.zheng@gmail.com", SubscriberKey = "beiyi.zheng@gmail.com" } };
-                SendReturn srSend = tsdSend.Send();
-            }
-            catch (Exception ex)
-            {
-                string msg = ex.Message + ex.Source + ex.StackTrace.ToString();
-            }            
-        }
         protected void OnItemSaved(object sender, EventArgs args)
         {
             var item = Event.ExtractParameter(args, 0) as Item;
+            string customerKey = item.Name.Replace(" ","");
+            string description =string.Format( "Sitecore Item {0} updated" , item.Name);
+            string html = ProductInfoHtml(item);
 
-            CreateEmailSendDefination(item);
-            CreateTriggeredSendEmail(item);
+            ETDataExtension etd = new ETDataExtension();
+            PostReturnStatus postStatus = etd.CreateEmailSendDefination(customerKey, customerKey, description, description, html);
+            SendReturnStatus sendStatus = etd.CreateTriggeredSendEmail(customerKey,customerKey, Properties.Settings.Default.ApproverEmailAddress);
 
         }
 
@@ -151,7 +82,6 @@ namespace MylanCustomizations
 
             return newWarning.ToString();
         }
-
 
         private string ProductInfoHtml(Item item)
         {

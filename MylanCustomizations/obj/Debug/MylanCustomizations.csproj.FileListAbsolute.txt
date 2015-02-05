@@ -27,9 +27,9 @@ C:\Mylan\Mylan Institutional Products\MylanCustomizations\obj\Debug\MylanCustomi
 C:\Mylan\Mylan Institutional Products\MylanCustomizations\obj\Debug\MylanCustomizations.pdb
 C:\Mylan\Mylan Institutional Products\www\Web\bin\MylanCustomizations.dll
 C:\Mylan\Mylan Institutional Products\www\Web\bin\MylanCustomizations.pdb
+C:\Users\danbeiyi\mylan-usproduct-listing\www\Web\bin\MylanCustomizations.dll.config
 C:\Users\danbeiyi\mylan-usproduct-listing\www\Web\bin\MylanCustomizations.dll
 C:\Users\danbeiyi\mylan-usproduct-listing\www\Web\bin\MylanCustomizations.pdb
+C:\Users\danbeiyi\mylan-usproduct-listing\MylanCustomizations\obj\Debug\MylanCustomizations.csprojResolveAssemblyReference.cache
 C:\Users\danbeiyi\mylan-usproduct-listing\MylanCustomizations\obj\Debug\MylanCustomizations.dll
 C:\Users\danbeiyi\mylan-usproduct-listing\MylanCustomizations\obj\Debug\MylanCustomizations.pdb
-C:\Users\danbeiyi\mylan-usproduct-listing\www\Web\bin\MylanCustomizations.dll.config
-C:\Users\danbeiyi\mylan-usproduct-listing\MylanCustomizations\obj\Debug\MylanCustomizations.csprojResolveAssemblyReference.cache
