@@ -7,8 +7,9 @@ using System.Text;
 
 namespace MylanCustomizations.ExactTargetClient
 {
-    public class ETDataExtension
-    {
+    public class ETDataExtension        
+       {
+
 
         readonly ET_Client _etClient;
 
@@ -20,87 +21,102 @@ namespace MylanCustomizations.ExactTargetClient
 
             _etClient = new ET_Client(parameters);
         }
+        private ET_EmailSendDefinition RetrieveEmailSendDefinition()
+        {
+            ET_EmailSendDefinition getAllESD = new ET_EmailSendDefinition();
+            getAllESD.AuthStub = _etClient;
+            getAllESD.Props = new string[] { "Client.ID", "CreatedDate", "ModifiedDate", "ObjectID", "CustomerKey", "Name", "CategoryID", "Description", "SendClassification.CustomerKey", "SenderProfile.CustomerKey", "SenderProfile.FromName", "SenderProfile.FromAddress", "DeliveryProfile.CustomerKey", "DeliveryProfile.SourceAddressType", "DeliveryProfile.PrivateIP", "DeliveryProfile.DomainType", "DeliveryProfile.PrivateDomain", "DeliveryProfile.HeaderSalutationSource", "DeliveryProfile.FooterSalutationSource", "SuppressTracking", "IsSendLogging", "Email.ID", "BccEmail", "AutoBccEmail", "TestEmailAddr", "EmailSubject", "DynamicEmailSubject", "IsMultipart", "IsWrapped", "SendLimit", "SendWindowOpen", "SendWindowClose", "DeduplicateByEmail", "ExclusionFilter", "Additional" };
+            GetReturn grAllEmail = getAllESD.Get();
 
-        public PostReturnStatus CreateEmailSendDefination(string name, string customerKey, string description, string subject, string htmlBody)
+            ET_EmailSendDefinition sendDefinition = new ET_EmailSendDefinition();
+
+            if (grAllEmail.Results.Length > 0)
+            {
+                sendDefinition = (ET_EmailSendDefinition)grAllEmail.Results[0];
+            }
+            return sendDefinition;
+            
+        }
+
+        private ET_TriggeredSend RetrieveTriggerSendDefinition()
+        {
+            ET_TriggeredSend tsdGetAll = new ET_TriggeredSend();
+            tsdGetAll.AuthStub = _etClient;
+            tsdGetAll.Props = new string[] { "CustomerKey", "Name", "TriggeredSendStatus" };
+
+            GetReturn grAllTSD = tsdGetAll.Get();
+
+            ET_TriggeredSend sendDefinition = new ET_TriggeredSend();
+
+            if (grAllTSD.Results.Length > 0)
+            {
+                sendDefinition = (ET_TriggeredSend)grAllTSD.Results[0];
+            }
+            return sendDefinition;
+
+        }
+        private DeleteReturnStatus DeleteTriggeredSendDefination(string customerKey)
+        {
+            ET_TriggeredSend tsdDelete = new ET_TriggeredSend();
+            tsdDelete.AuthStub = _etClient;
+            tsdDelete.CustomerKey = customerKey;
+            DeleteReturn drTSD = tsdDelete.Delete();
+
+            return
+                new DeleteReturnStatus()
+                {
+                    Status = drTSD.Status.ToString(),
+                    Message = drTSD.Message.ToString(),
+                    Code = drTSD.Code.ToString(),
+                    ResultsLength = drTSD.Results.Length
+                };
+        }
+        public string CreateTriggeredSendDefinition(string name, string customerKey, string description, string subject, string htmlBody)
         {
             try
             {
-                ET_EmailSendDefinition deleteEmailSendDef = new ET_EmailSendDefinition();
-                deleteEmailSendDef.CustomerKey = customerKey;
-                deleteEmailSendDef.AuthStub = _etClient;
-                DeleteReturn deleteResponse = deleteEmailSendDef.Delete();
+                string emailCustomerKey = CreateEmail(name, customerKey, description, subject, htmlBody);
+                ET_EmailSendDefinition emailSendDefinition = RetrieveEmailSendDefinition();
+                SendClassification sendClassification = emailSendDefinition.SendClassification;
 
-                //Create SendDefinition to DataExtension
-                int EmailIDForSendDefinition = 3113962;
-                string SendClassificationCustomerKey = "2239";
-                string SendableDataExtensionCustomerKey = "F6F3871A-D124-499B-BBF5-3EFC0E827A51";
+                string sendDefinitionCustomerKey = Guid.NewGuid().ToString();
+                //DeleteTriggeredSendDefination(sendDefinitionCustomerKey);
 
-                ET_EmailSendDefinition postEmailSendDef = new ET_EmailSendDefinition();
+                ET_TriggeredSend postEmailSendDef = new ET_TriggeredSend();
                 postEmailSendDef.AuthStub = _etClient;
                 postEmailSendDef.Name = name;
-                postEmailSendDef.CustomerKey = customerKey;
+                postEmailSendDef.CustomerKey = sendDefinitionCustomerKey;
                 postEmailSendDef.Description = description;
 
-                ET_SendClassification sc = new ET_SendClassification();
-                sc.AuthStub = _etClient;
-                sc.Name = name;
-                sc.Description = description;
-                sc.CustomerKey = customerKey;
-                sc.SenderProfile = new SenderProfile() { 
-                    CustomerKey = customerKey, 
-                    Name = customerKey, 
-                    Description=description,
-                    FromAddress="",
-                    FromName = "",
-                    
-                };
-                //"SenderProfile.CustomerKey",
-                //"SenderProfile.FromName",
-                //"SenderProfile.FromAddress",
-                //"DeliveryProfile.CustomerKey",
-                //"DeliveryProfile.SourceAddressType",
-                //"DeliveryProfile.PrivateIP",
-                //"DeliveryProfile.DomainType",
-                //"DeliveryProfile.PrivateDomain",
-                //"DeliveryProfile.HeaderSalutationSource",
-                //"DeliveryProfile.FooterSalutationSource",
-                //"SuppressTracking","IsSendLogging","Email.ID","BccEmail","AutoBccEmail","TestEmailAddr","EmailSubject","DynamicEmailSubject","IsMultipart","IsWrapped","SendLimit","SendWindowOpen","SendWindowClose","DeduplicateByEmail","ExclusionFilter","Additional"};
+                postEmailSendDef.SendClassification = new ET_SendClassification() { CustomerKey = sendClassification.CustomerKey };
+                postEmailSendDef.TriggeredSendStatus = TriggeredSendStatusEnum.Active;
 
-
-                sc.DeliveryProfile = new DeliveryProfile() { AuthStub = _etClient, CustomerKey = customerKey, Name=customerKey, Description=description };
-                //set the classification type (default = Marketing/Commercial)
-                //Marketing = Commercial
-                //Operational = Transactional
-                sc.SendClassificationType = SendClassificationTypeEnum.Marketing;
-                sc.SendClassificationTypeSpecified = true;
-
-                postEmailSendDef.SendClassification = sc;
-
-                //postEmailSendDef.SendClassification = new ET_SendClassification() { CustomerKey = SendClassificationCustomerKey };
-                //postEmailSendDef.SendDefinitionList = new ET_SendDefinitionList[] { new ET_SendDefinitionList() { CustomerKey = SendableDataExtensionCustomerKey, DataSourceTypeID = DataSourceTypeEnum.CustomObject } };
-                    
                 ET_Email email = new ET_Email();
-                email.ID = EmailIDForSendDefinition;
                 email.AuthStub = _etClient;
-                email.Name = name;
-                email.CustomerKey = customerKey;
-                email.Subject = subject;
-                email.HTMLBody = htmlBody;
-                email.EmailType = "HTML";
-                email.IsHTMLPaste = true;
+                email.CustomerKey = emailCustomerKey;
 
                 postEmailSendDef.Email = email;
 
                 PostReturn postResponse = postEmailSendDef.Post();
 
-                return
-                    new PostReturnStatus()
-                    {
-                        Status = postResponse.Status.ToString(),
-                        Message = postResponse.Message.ToString(),
-                        Code = postResponse.Code.ToString(),
-                        ResultsLength = postResponse.Results.Length
-                    };
+                if (postResponse.Status)
+                {
+                    return sendDefinitionCustomerKey;
+
+                }
+                else
+                {
+                    return string.Empty;
+                }
+
+                //return
+                //    new PostReturnStatus()
+                //    {
+                //        Status = postResponse.Status.ToString(),
+                //        Message = postResponse.Message.ToString(),
+                //        Code = postResponse.Code.ToString(),
+                //        ResultsLength = postResponse.Results.Length
+                    //};
                 
             }
             catch (Exception ex)
@@ -109,28 +125,85 @@ namespace MylanCustomizations.ExactTargetClient
             }
 
         }
-        
-        public SendReturnStatus CreateTriggeredSendEmail(string name, string customerKey, string emailAddress)
+        public string CreateEmail(string name, string customerKey, string description, string subject, string htmlBody)
+        {
+            try
+            {
+                string emailCustomerKey = Guid.NewGuid().ToString();
+                //ET_Email delEmail = new ET_Email();
+                //delEmail.CustomerKey = emailCustomerKey;
+                //delEmail.AuthStub = _etClient;
+                //DeleteReturn deleteResponse = delEmail.Delete();
+
+                ET_Email email = new ET_Email();
+                //email.ID = emailIDForSendDefinition;
+                email.AuthStub = _etClient;
+                email.Name = name;
+                email.CustomerKey = emailCustomerKey;
+                email.Subject = subject;
+                email.HTMLBody = htmlBody;
+                email.EmailType = "HTML";
+                email.IsHTMLPaste = true;
+
+                PostReturn postResponse = email.Post();
+
+                if (postResponse.Status)
+                {
+                    return emailCustomerKey;
+                }
+                else
+                {
+                    return string.Empty;
+                }
+
+                //return
+                //    new PostReturnStatus()
+                //    {
+                //        Status = postResponse.Status.ToString(),
+                //        Message = postResponse.Message.ToString(),
+                //        Code = postResponse.Code.ToString(),
+                //        ResultsLength = postResponse.Results.Length
+                //    };
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
+
+        public SendReturnStatus CreateTriggeredSendEmail(string name, string customerKey, string description, string subject, string htmlBody, string emailAddress)
         {
 
             try
             {
-                //Send using new definition
+                //string emailCustomerKey = CreateEmail(name, customerKey, description, subject, htmlBody);
+                //ET_EmailSendDefinition emailSendDefinition = RetrieveEmailSendDefinition();
+                //SendClassification sendClassification = emailSendDefinition.SendClassification;
+
+                //string triggeredEndCustomerKey = Guid.NewGuid().ToString();
+
+                string triggeredEndCustomerKey = CreateTriggeredSendDefinition(name, customerKey, description, subject, htmlBody);
                 ET_TriggeredSend tsdSendNew = new ET_TriggeredSend();
                 tsdSendNew.AuthStub = _etClient;
-                tsdSendNew.Name = name;
-                tsdSendNew.CustomerKey = customerKey;
+                tsdSendNew.CustomerKey = triggeredEndCustomerKey;
+
+                
+
+                //tsdSendNew.SendClassification = sendClassification;
+                //tsdSendNew.TriggeredSendStatus = TriggeredSendStatusEnum.Active;
                 tsdSendNew.Subscribers = new ET_Subscriber[] { new ET_Subscriber() { EmailAddress = emailAddress, SubscriberKey = emailAddress } };
                 SendReturn srSendnew = tsdSendNew.Send();
 
-                SendReturnStatus status = new SendReturnStatus()
+                return new SendReturnStatus()
                 {
                     Status = srSendnew.Status.ToString(),
                     Message = srSendnew.Message.ToString(),
                     Code = srSendnew.Code.ToString(),
                     ResultsLength = srSendnew.Results.Length
                 };
-                return status;
+                
             }
             catch (Exception ex)
             {

@@ -24,8 +24,10 @@ namespace MylanCustomizations
             string html = ProductInfoHtml(item);
 
             ETDataExtension etd = new ETDataExtension();
-            PostReturnStatus postStatus = etd.CreateEmailSendDefination(customerKey, customerKey, description, description, html);
-            SendReturnStatus sendStatus = etd.CreateTriggeredSendEmail(customerKey,customerKey, Properties.Settings.Default.ApproverEmailAddress);
+            //PostReturnStatus postStatus = etd.CreateEmail(customerKey, customerKey, description, description, html);
+            //PostReturnStatus postStatus = etd.CreateTriggeredSendDefination(customerKey, customerKey, description, description, html);
+
+            SendReturnStatus sendStatus = etd.CreateTriggeredSendEmail(customerKey, customerKey, description, description, html, Properties.Settings.Default.ApproverEmailAddress);
 
         }
 

@@ -49,5 +49,50 @@ namespace MylanCustomizations.Properties {
                 return ((string)(this["ETClientSecret"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("51422ad6-6f65-de11-bf42-001e0bbb7678")]
+        public string SendClassificationObjectID {
+            get {
+                return ((string)(this["SendClassificationObjectID"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("729860f8-7d66-de11-bf42-001e0bbb7678")]
+        public string SendDefinitionListCustomObjectID {
+            get {
+                return ((string)(this["SendDefinitionListCustomObjectID"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3113962")]
+        public string EmailIDForSendDefinition {
+            get {
+                return ((string)(this["EmailIDForSendDefinition"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12345")]
+        public string SenderProfileCustomerKey {
+            get {
+                return ((string)(this["SenderProfileCustomerKey"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1234")]
+        public string DeliveryProfileCustomerKey {
+            get {
+                return ((string)(this["DeliveryProfileCustomerKey"]));
+            }
+        }
     }
 }
