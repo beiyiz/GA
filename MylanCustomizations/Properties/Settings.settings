@@ -11,20 +11,8 @@
     <Setting Name="ETClientSecret" Type="System.String" Scope="Application">
       <Value Profile="(Default)">D5wxtEx6UGNVxgkbyrruJhQV</Value>
     </Setting>
-    <Setting Name="SendClassificationObjectID" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">51422ad6-6f65-de11-bf42-001e0bbb7678</Value>
-    </Setting>
-    <Setting Name="SendDefinitionListCustomObjectID" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">729860f8-7d66-de11-bf42-001e0bbb7678</Value>
-    </Setting>
-    <Setting Name="EmailIDForSendDefinition" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">3113962</Value>
-    </Setting>
-    <Setting Name="SenderProfileCustomerKey" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">12345</Value>
-    </Setting>
-    <Setting Name="DeliveryProfileCustomerKey" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">1234</Value>
+    <Setting Name="TriggeredSendCustomerKey" Type="System.Guid" Scope="Application">
+      <Value Profile="(Default)">224ba9a8-b67f-406e-aa1f-601d68af59ce</Value>
     </Setting>
   </Settings>
 </SettingsFile>

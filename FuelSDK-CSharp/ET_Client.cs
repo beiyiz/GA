@@ -287,7 +287,8 @@ namespace FuelSDK
 
 
         public PostReturn(APIObject theObject)
-        {
+        { 
+            
             this.Message = "";
             this.Status = true;
             this.MoreResults = false;
@@ -297,52 +298,60 @@ namespace FuelSDK
             theObject.AuthStub.refreshToken();
             using (var scope = new OperationContextScope(theObject.AuthStub.soapclient.InnerChannel))
             {
-                //Add oAuth token to SOAP header.
-                XNamespace ns = "http://exacttarget.com";
-                var oauthElement = new XElement(ns + "oAuthToken", theObject.AuthStub.internalAuthToken);
-                var xmlHeader = MessageHeader.CreateHeader("oAuth", "http://exacttarget.com", oauthElement);
-                OperationContext.Current.OutgoingMessageHeaders.Add(xmlHeader);
-
-                var httpRequest = new System.ServiceModel.Channels.HttpRequestMessageProperty();
-                OperationContext.Current.OutgoingMessageProperties.Add(System.ServiceModel.Channels.HttpRequestMessageProperty.Name, httpRequest);
-                httpRequest.Headers.Add(HttpRequestHeader.UserAgent, theObject.AuthStub.SDKVersion);
-
-                theObject = this.TranslateObject(theObject);
-
-                requestResults = theObject.AuthStub.soapclient.Create(new CreateOptions(), new APIObject[] { theObject }, out RequestID, out OverallStatus);
-
-                this.Status = true;
-                this.Code = 200;
-                this.MoreResults = false;
-                this.Message = "";
-
-                if (OverallStatus != "OK")
+                try
                 {
-                    this.Status = false;
-                }
+                    //Add oAuth token to SOAP header.
+                    XNamespace ns = "http://exacttarget.com";
+                    var oauthElement = new XElement(ns + "oAuthToken", theObject.AuthStub.internalAuthToken);
+                    var xmlHeader = MessageHeader.CreateHeader("oAuth", "http://exacttarget.com", oauthElement);
+                    OperationContext.Current.OutgoingMessageHeaders.Add(xmlHeader);
 
-                if (requestResults.GetType() == typeof(CreateResult[]) && requestResults.Length > 0)
-                {
-                    List<ResultDetail> results = new List<ResultDetail>();
-                    foreach (CreateResult cr in requestResults)
+                    var httpRequest = new System.ServiceModel.Channels.HttpRequestMessageProperty();
+                    OperationContext.Current.OutgoingMessageProperties.Add(System.ServiceModel.Channels.HttpRequestMessageProperty.Name, httpRequest);
+                    httpRequest.Headers.Add(HttpRequestHeader.UserAgent, theObject.AuthStub.SDKVersion);
+
+                    theObject = this.TranslateObject(theObject);
+               
+                    requestResults = theObject.AuthStub.soapclient.Create(new CreateOptions(), new APIObject[] { theObject }, out RequestID, out OverallStatus);
+
+                    this.Status = true;
+                    this.Code = 200;
+                    this.MoreResults = false;
+                    this.Message = "";
+
+                    if (OverallStatus != "OK")
                     {
-                        ResultDetail detail = new ResultDetail();
-                        if (cr.StatusCode != null)
-                            detail.StatusCode = cr.StatusCode;
-                        if (cr.StatusMessage != null)
-                            detail.StatusMessage = cr.StatusMessage;
-                        if (cr.NewObjectID != null)
-                            detail.NewObjectID = cr.NewObjectID;
-                        if (cr.Object != null)
-                            detail.Object = this.TranslateObject(cr.Object);
-                        detail.OrdinalID = cr.OrdinalID;
-                        detail.ErrorCode = cr.ErrorCode;
-                        detail.NewID = cr.NewID;
-                        results.Add(detail);
+                        this.Status = false;
                     }
-                    this.Results = results.ToArray();
+
+                    if (requestResults.GetType() == typeof(CreateResult[]) && requestResults.Length > 0)
+                    {
+                        List<ResultDetail> results = new List<ResultDetail>();
+                        foreach (CreateResult cr in requestResults)
+                        {
+                            ResultDetail detail = new ResultDetail();
+                            if (cr.StatusCode != null)
+                                detail.StatusCode = cr.StatusCode;
+                            if (cr.StatusMessage != null)
+                                detail.StatusMessage = cr.StatusMessage;
+                            if (cr.NewObjectID != null)
+                                detail.NewObjectID = cr.NewObjectID;
+                            if (cr.Object != null)
+                                detail.Object = this.TranslateObject(cr.Object);
+                            detail.OrdinalID = cr.OrdinalID;
+                            detail.ErrorCode = cr.ErrorCode;
+                            detail.NewID = cr.NewID;
+                            results.Add(detail);
+                        }
+                        this.Results = results.ToArray();
+                    }
                 }
-            }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            } 
+           
         }
 
 
@@ -1898,6 +1907,7 @@ namespace FuelSDK
         public int? FolderID { get; set; }
         internal string FolderMediaType = "triggered_send";
         public ET_Subscriber[] Subscribers { get; set; }
+      //  public ET_SendClassification sendClassification { get; set; }
 
         public FuelSDK.SendReturn Send()
         {
@@ -1978,11 +1988,59 @@ namespace FuelSDK
 
     public class ET_PropertyDefinition : FuelSDK.PropertyDefinition { }
 
-    public class ET_SendClassification : FuelSDK.SendClassification { }
+    public class ET_SendClassification : FuelSDK.SendClassification {
+        //ET_SenderProfile SenderProfile { get; set; }
+        //ET_DeliveryProfile DeliveryProfile { get; set; }
 
-    public class ET_SenderProfile : FuelSDK.SenderProfile { }
+        public FuelSDK.PostReturn Post()
+        {
+            return new FuelSDK.PostReturn(this);
+        }
+        public FuelSDK.GetReturn Get()
+        {
+            FuelSDK.GetReturn response = new GetReturn(this);
+            this.LastRequestID = response.RequestID;
+            return response;
+        }
+        public FuelSDK.DeleteReturn Delete()
+        {
+            return new FuelSDK.DeleteReturn(this);
+        }
+    }
 
-    public class ET_DeliveryProfile : FuelSDK.DeliveryProfile { }
+    public class ET_SenderProfile : FuelSDK.SenderProfile {
+        public FuelSDK.PostReturn Post()
+        {
+            return new FuelSDK.PostReturn(this);
+        }
+        public FuelSDK.GetReturn Get()
+        {
+            FuelSDK.GetReturn response = new GetReturn(this);
+            this.LastRequestID = response.RequestID;
+            return response;
+        }
+        public FuelSDK.DeleteReturn Delete()
+        {
+            return new FuelSDK.DeleteReturn(this);
+        }
+    }
+
+    public class ET_DeliveryProfile : FuelSDK.DeliveryProfile {
+        public FuelSDK.PostReturn Post()
+        {
+            return new FuelSDK.PostReturn(this);
+        }
+        public FuelSDK.GetReturn Get()
+        {
+            FuelSDK.GetReturn response = new GetReturn(this);
+            this.LastRequestID = response.RequestID;
+            return response;
+        }
+        public FuelSDK.DeleteReturn Delete()
+        {
+            return new FuelSDK.DeleteReturn(this);
+        }
+    }
 
     public class ET_SendDefinitionList : FuelSDK.SendDefinitionList { }
 

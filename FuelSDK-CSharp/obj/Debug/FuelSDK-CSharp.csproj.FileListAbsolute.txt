@@ -4,3 +4,8 @@ C:\Users\danbeiyi\Downloads\FuelSDK-CSharp-Dot9\FuelSDK-CSharp-Dot9\FuelSDK-CSha
 C:\Users\danbeiyi\Downloads\FuelSDK-CSharp-Dot9\FuelSDK-CSharp-Dot9\FuelSDK-CSharp\obj\Debug\FuelSDK-CSharp.csprojResolveAssemblyReference.cache
 C:\Users\danbeiyi\Downloads\FuelSDK-CSharp-Dot9\FuelSDK-CSharp-Dot9\FuelSDK-CSharp\obj\Debug\CSharpSDK.dll
 C:\Users\danbeiyi\Downloads\FuelSDK-CSharp-Dot9\FuelSDK-CSharp-Dot9\FuelSDK-CSharp\obj\Debug\CSharpSDK.pdb
+C:\Users\danbeiyi\mylan-usproduct-listing\FuelSDK-CSharp\bin\Debug\CSharpSDK.dll
+C:\Users\danbeiyi\mylan-usproduct-listing\FuelSDK-CSharp\bin\Debug\CSharpSDK.pdb
+C:\Users\danbeiyi\mylan-usproduct-listing\FuelSDK-CSharp\bin\Debug\Newtonsoft.Json.dll
+C:\Users\danbeiyi\mylan-usproduct-listing\FuelSDK-CSharp\obj\Debug\CSharpSDK.dll
+C:\Users\danbeiyi\mylan-usproduct-listing\FuelSDK-CSharp\obj\Debug\CSharpSDK.pdb

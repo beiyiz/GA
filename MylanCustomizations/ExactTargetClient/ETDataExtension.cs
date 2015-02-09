@@ -32,66 +32,126 @@ namespace MylanCustomizations.ExactTargetClient
 
             if (grAllEmail.Results.Length > 0)
             {
-                sendDefinition = (ET_EmailSendDefinition)grAllEmail.Results[0];
+                sendDefinition = (ET_EmailSendDefinition)grAllEmail.Results[1];
             }
             return sendDefinition;
             
         }
 
-        private ET_TriggeredSend RetrieveTriggerSendDefinition()
+        private APIObject[] RetrieveTriggerSendDefinition()
         {
             ET_TriggeredSend tsdGetAll = new ET_TriggeredSend();
             tsdGetAll.AuthStub = _etClient;
-            tsdGetAll.Props = new string[] { "CustomerKey", "Name", "TriggeredSendStatus" };
+            tsdGetAll.Props = new string[] { "CustomerKey", "Name", "TriggeredSendStatus", "SendClassification.CustomerKey"};
 
             GetReturn grAllTSD = tsdGetAll.Get();
 
-            ET_TriggeredSend sendDefinition = new ET_TriggeredSend();
-
-            if (grAllTSD.Results.Length > 0)
-            {
-                sendDefinition = (ET_TriggeredSend)grAllTSD.Results[0];
-            }
-            return sendDefinition;
+            return grAllTSD.Results;
 
         }
-        private DeleteReturnStatus DeleteTriggeredSendDefination(string customerKey)
+        private APIObject[] RetrieveSendProfile()
         {
-            ET_TriggeredSend tsdDelete = new ET_TriggeredSend();
-            tsdDelete.AuthStub = _etClient;
-            tsdDelete.CustomerKey = customerKey;
-            DeleteReturn drTSD = tsdDelete.Delete();
+            ET_SenderProfile spGetAll = new ET_SenderProfile();
+            spGetAll.AuthStub = _etClient;
+            spGetAll.Props = new string[] { "CustomerKey", "Name" };
 
+            GetReturn grAllSP = spGetAll.Get();
+
+            return grAllSP.Results;
+
+        }
+        private APIObject[] RetrieveDeliveryProfile()
+        {
+            ET_DeliveryProfile dpGetAll = new ET_DeliveryProfile();
+            dpGetAll.AuthStub = _etClient;
+            dpGetAll.Props = new string[] { "CustomerKey", "Name" };
+
+            GetReturn grAllDP = dpGetAll.Get();
+
+            return grAllDP.Results;
+
+        }
+        private APIObject[] RetrieveSendClassification()
+        {
+            ET_SendClassification scGetAll = new ET_SendClassification();
+            scGetAll.AuthStub = _etClient;
+            scGetAll.Props = new string[] { "CustomerKey", "Name" };
+
+            GetReturn grAllSC = scGetAll.Get();
+
+            return grAllSC.Results;
+
+        }
+        private DeleteReturnStatus DeleteSendClassification(string customerKey)
+        {
+            FuelSDK.ET_SendClassification scDelete = new FuelSDK.ET_SendClassification();
+            scDelete.AuthStub = _etClient;
+
+            var allSC = RetrieveSendClassification();
+            foreach (var o in allSC)
+            {
+                FuelSDK.ET_SendClassification scf = (FuelSDK.ET_SendClassification)o;                
+               
+                if (scf.CustomerKey == customerKey)
+                {
+                    scDelete.CustomerKey = ((ET_SendClassification)o).CustomerKey;
+                    DeleteReturn drTSD = scDelete.Delete();
+
+                    return
+                        new DeleteReturnStatus()
+                        {
+                            Status = drTSD.Status.ToString(),
+                            Message = drTSD.Message.ToString(),
+                            Code = drTSD.Code.ToString(),
+                            ResultsLength = drTSD.Results.Length
+                        };
+                }
+                    
+                
+            }
             return
                 new DeleteReturnStatus()
                 {
-                    Status = drTSD.Status.ToString(),
-                    Message = drTSD.Message.ToString(),
-                    Code = drTSD.Code.ToString(),
-                    ResultsLength = drTSD.Results.Length
+                    Status = "OK"
                 };
         }
         public string CreateTriggeredSendDefinition(string name, string customerKey, string description, string subject, string htmlBody)
         {
             try
             {
+                DeleteSendClassification(customerKey);
+
                 string emailCustomerKey = CreateEmail(name, customerKey, description, subject, htmlBody);
-                ET_EmailSendDefinition emailSendDefinition = RetrieveEmailSendDefinition();
-                SendClassification sendClassification = emailSendDefinition.SendClassification;
+
+                //var sp = RetrieveSendProfile();
+                //var dp = RetrieveDeliveryProfile();
+
+                ET_SendClassification sendClassification = new ET_SendClassification();
+
+                sendClassification.Name = name;
+                sendClassification.CustomerKey = customerKey;
+                sendClassification.SendClassificationType = SendClassificationTypeEnum.Marketing;
+                sendClassification.SendClassificationTypeSpecified = true;
+
+                sendClassification.SenderProfile = new ET_SenderProfile() { CustomerKey = "Default" };
+                sendClassification.DeliveryProfile = new ET_DeliveryProfile() { CustomerKey = "Default" };
+
+                sendClassification.AuthStub = _etClient;
+                PostReturn status = sendClassification.Post();
 
                 string sendDefinitionCustomerKey = Guid.NewGuid().ToString();
-                //DeleteTriggeredSendDefination(sendDefinitionCustomerKey);
 
-                ET_TriggeredSend postEmailSendDef = new ET_TriggeredSend();
+                FuelSDK.ET_TriggeredSend postEmailSendDef = new FuelSDK.ET_TriggeredSend();
                 postEmailSendDef.AuthStub = _etClient;
                 postEmailSendDef.Name = name;
                 postEmailSendDef.CustomerKey = sendDefinitionCustomerKey;
                 postEmailSendDef.Description = description;
 
-                postEmailSendDef.SendClassification = new ET_SendClassification() { CustomerKey = sendClassification.CustomerKey };
+                postEmailSendDef.SendClassification = (SendClassification)sendClassification; // new ET_SendClassification() { CustomerKey = sendClassification.CustomerKey };
                 postEmailSendDef.TriggeredSendStatus = TriggeredSendStatusEnum.Active;
 
-                ET_Email email = new ET_Email();
+                FuelSDK.ET_Email email = new FuelSDK.ET_Email();
+                email.Name = name;
                 email.AuthStub = _etClient;
                 email.CustomerKey = emailCustomerKey;
 
@@ -178,21 +238,20 @@ namespace MylanCustomizations.ExactTargetClient
 
             try
             {
-                //string emailCustomerKey = CreateEmail(name, customerKey, description, subject, htmlBody);
-                //ET_EmailSendDefinition emailSendDefinition = RetrieveEmailSendDefinition();
-                //SendClassification sendClassification = emailSendDefinition.SendClassification;
-
-                //string triggeredEndCustomerKey = Guid.NewGuid().ToString();
 
                 string triggeredEndCustomerKey = CreateTriggeredSendDefinition(name, customerKey, description, subject, htmlBody);
+
+                //string triggeredEndCustomerKey = CreateTriggeredSendDefinition(name, customerKey, description, subject, htmlBody);
                 ET_TriggeredSend tsdSendNew = new ET_TriggeredSend();
                 tsdSendNew.AuthStub = _etClient;
                 tsdSendNew.CustomerKey = triggeredEndCustomerKey;
 
-                
+                //ET_Email email = new ET_Email();
+                //email.AuthStub = _etClient;
+                //email.CustomerKey = emailCustomerKey;
 
-                //tsdSendNew.SendClassification = sendClassification;
-                //tsdSendNew.TriggeredSendStatus = TriggeredSendStatusEnum.Active;
+                //tsdSendNew.Email = email;
+
                 tsdSendNew.Subscribers = new ET_Subscriber[] { new ET_Subscriber() { EmailAddress = emailAddress, SubscriberKey = emailAddress } };
                 SendReturn srSendnew = tsdSendNew.Send();
 
