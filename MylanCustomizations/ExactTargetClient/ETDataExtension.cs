@@ -69,9 +69,9 @@ namespace MylanCustomizations.ExactTargetClient
                 customerKey = Properties.Settings.Default.ProductUpdateCustomerKey.ToString();
             }
 
-            List<ET_DataExtensionColumn> cols = RetrieveAllColumnsOfDataExtension(customerKey);
+            //List<ET_DataExtensionColumn> cols = RetrieveAllColumnsOfDataExtension(customerKey);
 
-            List<ET_DataExtensionRow> rows = RetrieveRowsOfDataExtension(customerKey, cols);
+            //List<ET_DataExtensionRow> rows = RetrieveRowsOfDataExtension(customerKey, cols);
 
             List<KeyValuePair<string, string>> columnValues = new List<KeyValuePair<string,string>>();
 
