@@ -2,17 +2,17 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MylanCustomizations.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ApproverEmailAddress" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">beiyi.zheng@gmail.com</Value>
-    </Setting>
     <Setting Name="ETClientId" Type="System.String" Scope="Application">
       <Value Profile="(Default)">3uqagf2nrt2mm27q3rt45ett</Value>
     </Setting>
     <Setting Name="ETClientSecret" Type="System.String" Scope="Application">
       <Value Profile="(Default)">D5wxtEx6UGNVxgkbyrruJhQV</Value>
     </Setting>
-    <Setting Name="TriggeredSendCustomerKey" Type="System.Guid" Scope="Application">
-      <Value Profile="(Default)">224ba9a8-b67f-406e-aa1f-601d68af59ce</Value>
+    <Setting Name="NewProductDECustomerKey" Type="System.Guid" Scope="Application">
+      <Value Profile="(Default)">10b5ce3e-d76c-483c-be20-c456e9957575</Value>
+    </Setting>
+    <Setting Name="ProductUpdateCustomerKey" Type="System.Guid" Scope="Application">
+      <Value Profile="(Default)">85a648a8-55df-440e-8f1d-2bf5af9f1399</Value>
     </Setting>
   </Settings>
 </SettingsFile>

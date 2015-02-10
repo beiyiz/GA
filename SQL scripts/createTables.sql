@@ -22,7 +22,9 @@ CREATE TABLE [dbo].[ItemChangeHistory](
 	[ChangeType] [varchar](50) NOT NULL,
 	[ChangeDate] [smalldatetime] NOT NULL,
 	[ItemHtml] [varchar](max)   NULL,
+	[ItemName] [varchar](50) NOT NULL,
 	[ProductName] [varchar](50) NOT NULL,
+	ProductCategory [varchar](50) NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[ItemChangeId] ASC
@@ -33,6 +35,8 @@ GO
 
 alter table [dbo].[ItemChangeHistory] add  ApprovalStatus varchar(10) null
 go
+
+
 
 CREATE TABLE [dbo].[ItemChangeDetails](
 	[ItemChangeDetailId] [int] IDENTITY(1,1) NOT NULL,

@@ -60,6 +60,26 @@ namespace MylanCustomizations.ExactTargetClient
             return grAllSP.Results;
 
         }
+        
+        public void InsertIntoDataExtension(string html, string changeType, string productCategory)
+        {
+            string customerKey = Properties.Settings.Default.NewProductDECustomerKey.ToString();
+            if (changeType.ToLower() == "update")
+            {
+                customerKey = Properties.Settings.Default.ProductUpdateCustomerKey.ToString();
+            }
+
+            List<ET_DataExtensionColumn> cols = RetrieveAllColumnsOfDataExtension(customerKey);
+
+            List<ET_DataExtensionRow> rows = RetrieveRowsOfDataExtension(customerKey, cols);
+
+            List<KeyValuePair<string, string>> columnValues = new List<KeyValuePair<string,string>>();
+
+            columnValues.Add(new KeyValuePair<string,string>( "Product_cat", productCategory));
+            columnValues.Add(new KeyValuePair<string,string>( "HTML", html));
+
+            PostReturnStatus status = AddDataRowToDataExtension(customerKey, columnValues);
+        }
         private APIObject[] RetrieveDeliveryProfile()
         {
             ET_DeliveryProfile dpGetAll = new ET_DeliveryProfile();
@@ -216,14 +236,7 @@ namespace MylanCustomizations.ExactTargetClient
                     return string.Empty;
                 }
 
-                //return
-                //    new PostReturnStatus()
-                //    {
-                //        Status = postResponse.Status.ToString(),
-                //        Message = postResponse.Message.ToString(),
-                //        Code = postResponse.Code.ToString(),
-                //        ResultsLength = postResponse.Results.Length
-                //    };
+               
 
             }
             catch (Exception ex)
@@ -246,11 +259,6 @@ namespace MylanCustomizations.ExactTargetClient
                 tsdSendNew.AuthStub = _etClient;
                 tsdSendNew.CustomerKey = triggeredEndCustomerKey;
 
-                //ET_Email email = new ET_Email();
-                //email.AuthStub = _etClient;
-                //email.CustomerKey = emailCustomerKey;
-
-                //tsdSendNew.Email = email;
 
                 tsdSendNew.Subscribers = new ET_Subscriber[] { new ET_Subscriber() { EmailAddress = emailAddress, SubscriberKey = emailAddress } };
                 SendReturn srSendnew = tsdSendNew.Send();
@@ -305,6 +313,32 @@ namespace MylanCustomizations.ExactTargetClient
             };
             return status;
         }
+        public List<ET_DataExtensionRow> RetrieveRowsOfDataExtension(string customerKey, List<ET_DataExtensionColumn> cols)
+        {
+            List<ET_DataExtensionRow> rows = new List<ET_DataExtensionRow>();
+
+            ET_DataExtensionRow deRowGet = new ET_DataExtensionRow();
+            deRowGet.AuthStub = _etClient;
+            deRowGet.DataExtensionCustomerKey = customerKey;
+
+            List<string> props = new List<string>();
+            foreach (ET_DataExtensionColumn col in cols)
+            {
+                props.Add(col.Name);
+            }
+
+            deRowGet.Props = props.ToArray();
+            GetReturn grRow = deRowGet.Get();
+
+            if (grRow.Status)
+            {
+                foreach (ET_DataExtensionRow row in grRow.Results)
+                {
+                    rows.Add(row);
+                }
+            }
+            return rows;
+        }
         public List<ET_DataExtensionColumn> RetrieveAllColumnsOfDataExtension(string customerKey)
         {
             List<ET_DataExtensionColumn> columnList = new List<ET_DataExtensionColumn>();
@@ -345,7 +379,7 @@ namespace MylanCustomizations.ExactTargetClient
                     ResultsLength = prRowResponse.Results.Length
                 };
         }
-        public List<GetReturnStatus> RetrieveAllDataExtensions()
+        public APIObject[] RetrieveAllDataExtensions()
         {
             List<GetReturnStatus> statusList = new List<GetReturnStatus>();
 
@@ -355,28 +389,8 @@ namespace MylanCustomizations.ExactTargetClient
             getAllDataExtension.Props = new string[] { "CustomerKey", "Name" };
             GetReturn grAllDataExtension = getAllDataExtension.Get();
 
-            statusList.Add(new GetReturnStatus() {
-                Status = grAllDataExtension.Status.ToString(),
-                Message = grAllDataExtension.Message.ToString(),
-                Code = grAllDataExtension.Code.ToString(),
-                ResultsLength = grAllDataExtension.Results.Length
-            });
-           
-            //Continue Retrieve All DataExtension with GetMoreResults
-            while (grAllDataExtension.MoreResults)
-            {                
-                grAllDataExtension = getAllDataExtension.GetMoreResults();
-                statusList.Add(new GetReturnStatus()
-                {
-                    Status = grAllDataExtension.Status.ToString(),
-                    Message = grAllDataExtension.Message.ToString(),
-                    Code = grAllDataExtension.Code.ToString(),
-                    ResultsLength = grAllDataExtension.Results.Length
-                });
-           
-            }
 
-            return statusList;
+            return grAllDataExtension.Results;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Sitecore.Data.Fields;
+﻿using MylanCustomizations.ExactTargetClient;
+using Sitecore.Data.Fields;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -40,24 +41,38 @@ namespace mylan_institutional_products.Admin
         }
         public void PublishItem(int changeId, string approvalStatus)
         {
-            string itemId = GetItemChangeHistory(changeId, approvalStatus)[0].ItemId;
+            List<ItemChangeHistory> changeList = GetItemChangeHistory(changeId, approvalStatus);
 
-            Sitecore.Data.Database master = Sitecore.Configuration.Factory.GetDatabase("master");
-            Sitecore.Data.Database web = Sitecore.Configuration.Factory.GetDatabase("web");
+            if (changeList.Count > 0)
+            {
 
-            Sitecore.Data.Items.Item item = master.Items.GetItem(itemId);
-            Sitecore.Publishing.PublishOptions publishOptions =
-              new Sitecore.Publishing.PublishOptions(item.Database,
-                                                     web,
-                                                     Sitecore.Publishing.PublishMode.SingleItem,
-                                                     item.Language,
-                                                     System.DateTime.Now);  
-            Sitecore.Publishing.Publisher publisher = new Sitecore.Publishing.Publisher(publishOptions);
+                ItemChangeHistory change = GetItemChangeHistory(changeId, approvalStatus)[0];
 
-            publisher.Options.RootItem = item;
-            publisher.Options.Deep = true;
+                string itemId = change.ItemId;
+                string changeType = change.ChangeType;
 
-            publisher.Publish();
+
+                ETDataExtension etd = new ETDataExtension();
+
+                etd.InsertIntoDataExtension(change.ItemHtml, change.ChangeType, change.ProductCategory);
+
+                Sitecore.Data.Database master = Sitecore.Configuration.Factory.GetDatabase("master");
+                Sitecore.Data.Database web = Sitecore.Configuration.Factory.GetDatabase("web");
+
+                Sitecore.Data.Items.Item item = master.Items.GetItem(itemId);
+                Sitecore.Publishing.PublishOptions publishOptions =
+                  new Sitecore.Publishing.PublishOptions(item.Database,
+                                                         web,
+                                                         Sitecore.Publishing.PublishMode.SingleItem,
+                                                         item.Language,
+                                                         System.DateTime.Now);
+                Sitecore.Publishing.Publisher publisher = new Sitecore.Publishing.Publisher(publishOptions);
+
+                publisher.Options.RootItem = item;
+                publisher.Options.Deep = true;
+
+                publisher.Publish();
+            }
         }
 
         public void ResetItem(int changeId, string approvalStatus)
@@ -132,6 +147,7 @@ namespace mylan_institutional_products.Admin
                                 FieldName = rdr["FieldName"].ToString(),
                                 ProductName = rdr["ProductName"].ToString(),
                                 ItemName = rdr["ItemName"].ToString(),
+                                ProductCategory = rdr["ProductCategory"].ToString(),
                                 DisplayFieldName = rdr["DisplayFieldName"].ToString(),
                             };
                             changeList.Add(change);

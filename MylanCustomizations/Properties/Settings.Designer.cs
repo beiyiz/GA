@@ -25,15 +25,6 @@ namespace MylanCustomizations.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("beiyi.zheng@gmail.com")]
-        public string ApproverEmailAddress {
-            get {
-                return ((string)(this["ApproverEmailAddress"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3uqagf2nrt2mm27q3rt45ett")]
         public string ETClientId {
             get {
@@ -52,10 +43,19 @@ namespace MylanCustomizations.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("224ba9a8-b67f-406e-aa1f-601d68af59ce")]
-        public global::System.Guid TriggeredSendCustomerKey {
+        [global::System.Configuration.DefaultSettingValueAttribute("10b5ce3e-d76c-483c-be20-c456e9957575")]
+        public global::System.Guid NewProductDECustomerKey {
             get {
-                return ((global::System.Guid)(this["TriggeredSendCustomerKey"]));
+                return ((global::System.Guid)(this["NewProductDECustomerKey"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("85a648a8-55df-440e-8f1d-2bf5af9f1399")]
+        public global::System.Guid ProductUpdateCustomerKey {
+            get {
+                return ((global::System.Guid)(this["ProductUpdateCustomerKey"]));
             }
         }
     }

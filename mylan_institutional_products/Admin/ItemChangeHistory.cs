@@ -13,6 +13,7 @@ namespace mylan_institutional_products.Admin
         public string Revision { get; set; }
 
         public string ProductName { get; set; }
+        public string ProductCategory { get; set; }
 
         public string ItemHtml { get; set; }
         public string ChangeType { get; set; }

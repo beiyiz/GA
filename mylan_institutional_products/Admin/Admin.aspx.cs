@@ -75,7 +75,7 @@ namespace mylan_institutional_products.Admin
                     {
                         sbDetailTable = new StringBuilder();
                         sbDetailTable.AppendFormat("<table class='table'><thead><tr><th>Field Name</th><th>Old Value</th><th>New Value</th></tr></thead><tbody>{0}</tbody></table>", sbDetails.ToString());
-                        sb.AppendFormat("<tr id='tblDetails{0}' class='changeDetails'><td colspan='7'><div class='row well'>{1}</div></td></tr>", changeId, sbDetailTable.ToString());
+                        sb.AppendFormat("<tr id='tblDetails{0}' class='changeDetails'><td colspan='8'><div class='row well'>{1}</div></td></tr>", changeId, sbDetailTable.ToString());
 
                     }
                     itemId = change.ItemId;
@@ -88,7 +88,7 @@ namespace mylan_institutional_products.Admin
                     string actionApprove = string.Format("<input type=\"radio\" class=\"actionApprove\" name=\"action{0}\" value=\"{0}\" /> Approve", changeId);
                     string actionDelete = string.Format("<input type=\"radio\" class=\"actionDelete\" name=\"action{0}\" value=\"{0}\" /> Delete", changeId);
 
-                    sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6} {7}</td></tr>", change.ItemName, change.ProductName, change.ChangeType, change.ChangeDate, viewHtml, viewDetails, actionApprove, actionDelete);
+                    sb.AppendFormat("<tr><td>{8}</td><td>{1}</td><td>{0}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6} {7}</td></tr>", change.ItemName, change.ProductName, change.ChangeType, change.ChangeDate, viewHtml, viewDetails, actionApprove, actionDelete, change.ProductCategory);
                     sbDetails = new StringBuilder();
                 }
 
@@ -99,7 +99,7 @@ namespace mylan_institutional_products.Admin
             {
                 sbDetailTable = new StringBuilder();
                 sbDetailTable.AppendFormat("<table class='table'><thead><tr><th>Field Name</th><th>Old Value</th><th>New Value</th></tr></thead><tbody>{0}</tbody></table>", sbDetails.ToString());
-                sb.AppendFormat("<tr id='tblDetails{0}' class='changeDetails'><td colspan='7'><div class='row well'>{1}</div></td></tr>", changeId, sbDetailTable.ToString());
+                sb.AppendFormat("<tr id='tblDetails{0}' class='changeDetails'><td colspan='8'><div class='row well'>{1}</div></td></tr>", changeId, sbDetailTable.ToString());
 
             }
             tbChangeList.InnerHtml = sb.ToString();

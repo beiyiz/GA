@@ -57,8 +57,9 @@
         <table class="table" >
             <thead>
                 <tr>
-                    <th>Item Name</th>
+                    <th>Product Category</th>
                     <th>Product Name</th>
+                     <th>Item Name</th>
                     <th>Change Type</th>
                     <th>Change Date</th>
                     <th colspan="2">Html</th>

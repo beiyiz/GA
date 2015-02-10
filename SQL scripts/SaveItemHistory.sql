@@ -7,7 +7,8 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
+DROP PROCEDURE [dbo].[SaveItemHistory]
+GO
 -- =============================================
 -- Author:		<Author,,Name>
 -- Create date: <Create Date,,>
@@ -16,10 +17,12 @@ GO
 CREATE PROCEDURE [dbo].[SaveItemHistory]
 	-- Add the parameters for the stored procedure here
 	@ItemID varchar(50), 	
+	@ItemName varchar(50), 	
 	@ChangeType varchar(50),
 	@ItemHtml varchar(max) = null,
 	@Revision varchar(50),
-	@ProductName varchar(50)
+	@ProductName varchar(50),
+	@ProductCategory varchar(50)
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -27,39 +30,56 @@ BEGIN
 	SET NOCOUNT ON;
 
  declare @ItemChangeId table (ID int)
-
+ declare @ChangeID int;
  declare @existedChangeId int
+ declare @existedChangeType varchar(50)
 
- select @existedChangeId = ItemChangeId
+ select @existedChangeId = ItemChangeId, @existedChangeType=ChangeType, @ChangeID = ItemChangeId
  from [dbo].[ItemChangeHistory]
  where [ItemID] = @ItemID
 
- if (@existedChangeId is not null) 
+ if (@existedChangeId is not null and @existedChangeType = 'Update') 
  begin
 	delete from [dbo].[ItemChangeDetails] where [ItemChangeId] = @existedChangeId;
 	delete from [dbo].[ItemChangeHistory] where [ItemChangeId] = @existedChangeId;
  end
 
-INSERT INTO [dbo].[ItemChangeHistory]
-           ([ItemID]           
-           ,[ChangeType]
-           ,[ChangeDate]
-		   ,[ItemHtml]
-		   ,[Revision]
-		   ,ProductName)
-	output Inserted.ItemChangeId into @ItemChangeId
-     VALUES
-           (@ItemID           
-           ,@ChangeType
-           ,GETDATE()
-		   ,@ItemHtml
-		   ,@Revision
-		   ,@ProductName);
+  if (@existedChangeId is not null and @existedChangeType = 'Add') 
+	  begin
+		UPDATE [dbo].[ItemChangeHistory]
+		SET
+			ItemName = @ItemName,
+			ItemHtml = @ItemHtml
+		where [ItemID] = @ItemID	
+	  end
+  else
+	  begin
+			INSERT INTO [dbo].[ItemChangeHistory]
+				   ([ItemID]  
+				   ,ItemName         
+				   ,[ChangeType]
+				   ,[ChangeDate]
+				   ,[ItemHtml]
+				   ,[Revision]
+				   ,ProductName
+				   ,ProductCategory)
+			output Inserted.ItemChangeId into @ItemChangeId
+			 VALUES
+				   (@ItemID  
+				   ,@ItemName         
+				   ,@ChangeType
+				   ,GETDATE()
+				   ,@ItemHtml
+				   ,@Revision
+				   ,@ProductName
+				   ,@ProductCategory);
+
+			select @ChangeID=ID from @ItemChangeId;
+		end
 
 
-declare @ChangeID int;
 
-select @ChangeID=ID from @ItemChangeId;
+
 
 return @ChangeID;
 

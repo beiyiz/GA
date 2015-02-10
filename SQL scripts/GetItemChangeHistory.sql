@@ -7,7 +7,8 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
+DROP PROCEDURE [dbo].[GetItemChangeHistory]
+GO
 -- =============================================
 -- Author:		<Author,,Name>
 -- Create date: <Create Date,,>
@@ -34,6 +35,8 @@ BEGIN
 		  ,[ItemHtml]
 		  ,[Revision]
 		  ,ProductName
+		  ,ItemName
+		  ,ProductCategory
 		  ,h.ItemChangeId
 	FROM [dbo].[ItemChangeHistory] h 
 	INNER JOIN [dbo].[ItemChangeDetails] d ON h.ItemChangeId = d.ItemChangeId

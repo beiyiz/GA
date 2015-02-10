@@ -18,16 +18,14 @@ namespace MylanCustomizations
     {
         protected void OnItemSaved(object sender, EventArgs args)
         {
-            var item = Event.ExtractParameter(args, 0) as Item;
-            string customerKey = item.Name.Replace(" ","");
-            string description =string.Format( "Sitecore Item {0} updated" , item.Name);
-            string html = ProductInfoHtml(item);
+            //var item = Event.ExtractParameter(args, 0) as Item;
+            //string customerKey = item.Name.Replace(" ","");
+            //string description =string.Format( "Sitecore Item {0} updated" , item.Name);
+            //string html = ProductInfoHtml(item);
 
-            ETDataExtension etd = new ETDataExtension();
-            //PostReturnStatus postStatus = etd.CreateEmail(customerKey, customerKey, description, description, html);
-            //PostReturnStatus postStatus = etd.CreateTriggeredSendDefination(customerKey, customerKey, description, description, html);
+            //ETDataExtension etd = new ETDataExtension();
 
-            SendReturnStatus sendStatus = etd.CreateTriggeredSendEmail(customerKey, customerKey, description, description, html, Properties.Settings.Default.ApproverEmailAddress);
+            //SendReturnStatus sendStatus = etd.CreateTriggeredSendEmail(customerKey, customerKey, description, description, html, Properties.Settings.Default.ApproverEmailAddress);
 
         }
 
@@ -201,35 +199,47 @@ namespace MylanCustomizations
             Item product = item.Parent;
             productName = product.Fields["Product Group Name"].Value.ToString();
 
+            string productCategory = product.Parent.Fields["Category"].Value.ToString();
+
             spName = "dbo.SaveItemHistory";
 
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 using (SqlCommand command = new SqlCommand(spName, connection))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.Parameters.Add(new SqlParameter("@ItemID", item.ID.ToString()));
-                    command.Parameters.Add(new SqlParameter("@ItemName", item.Name.ToString()));
-                    command.Parameters.Add(new SqlParameter("@ChangeType", changeType));
-
-                    if (changeType != "Deleted")
+                    try
                     {
-                        html = ProductInfoHtml(item);
-                        revision = item.Fields["__Revision"].Value.ToString();
-                        command.Parameters.Add(new SqlParameter("@ItemHtml", html));
-                        command.Parameters.Add(new SqlParameter("@Revision", revision));
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        command.Parameters.Add(new SqlParameter("@ItemID", item.ID.ToString()));
+                        command.Parameters.Add(new SqlParameter("@ItemName", item.Name.ToString()));
+                        command.Parameters.Add(new SqlParameter("@ChangeType", changeType));
+
+                        if (changeType != "Deleted")
+                        {
+                            html = ProductInfoHtml(item);
+                            revision = item.Fields["__Revision"].Value.ToString();
+                            command.Parameters.Add(new SqlParameter("@ItemHtml", html));
+                            command.Parameters.Add(new SqlParameter("@Revision", revision));
+                        }
+                        command.Parameters.Add(new SqlParameter("@ProductName", productName));
+                        command.Parameters.Add(new SqlParameter("@ProductCategory", productCategory));
+
+                        var returnParameter = command.Parameters.Add("@ReturnVal", SqlDbType.Int);
+                        returnParameter.Direction = ParameterDirection.ReturnValue;
+
+                        connection.Open();
+
+                        command.ExecuteNonQuery();
+                        var result = returnParameter.Value;
+
+                        changeId = int.Parse(result.ToString());
                     }
-                    command.Parameters.Add(new SqlParameter("@ProductName", productName));
-                    var returnParameter = command.Parameters.Add("@ReturnVal", SqlDbType.Int);
-                    returnParameter.Direction = ParameterDirection.ReturnValue;
-
-                    connection.Open();
-
-                    command.ExecuteNonQuery();
-                    var result = returnParameter.Value;
-
-                    changeId = int.Parse(result.ToString());
+                    catch (Exception ex)
+                    {
+                        throw;
+                    }
+                   
 
                 }
             }
@@ -399,6 +409,8 @@ namespace MylanCustomizations
                 return;
             }
 
+            
+
             //string spName = "dbo.AddToPublishLog";
             //String ConnectionString = Sitecore.Configuration.Settings.GetConnectionString("custom");
             //if (!String.IsNullOrWhiteSpace(ConnectionString))
@@ -445,21 +457,21 @@ namespace MylanCustomizations
                 return;
             }
 
-            string spName = "dbo.SaveLastPublishLog";
-            String ConnectionString = Sitecore.Configuration.Settings.GetConnectionString("custom");
-            if (!String.IsNullOrWhiteSpace(ConnectionString))
-            {
-                using (SqlConnection connection = new SqlConnection(ConnectionString))
-                {
-                    using (SqlCommand command = new SqlCommand(spName, connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
+            //string spName = "dbo.SaveLastPublishLog";
+            //String ConnectionString = Sitecore.Configuration.Settings.GetConnectionString("custom");
+            //if (!String.IsNullOrWhiteSpace(ConnectionString))
+            //{
+            //    using (SqlConnection connection = new SqlConnection(ConnectionString))
+            //    {
+            //        using (SqlCommand command = new SqlCommand(spName, connection))
+            //        {
+            //            command.CommandType = CommandType.StoredProcedure;
 
-                        connection.Open();
-                        command.ExecuteNonQuery();
-                    }
-                }
-            }
+            //            connection.Open();
+            //            command.ExecuteNonQuery();
+            //        }
+            //    }
+            //}
         }
     }
 }
