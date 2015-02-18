@@ -82,9 +82,14 @@ namespace MylanCustomizations
 
             return newWarning.ToString();
         }
-
+        
         private string ProductInfoHtml(Item item)
         {
+            Sitecore.Data.Database masterDB = Sitecore.Configuration.Factory.GetDatabase("master");
+
+            string templatePath = "/sitecore/templates/User Defined/MylanInstitutionalProducts/Product/Data";
+            Item templateItem = masterDB.GetItem(templatePath);
+
             Item product = item.Parent;
 
             string productName = product.Fields["Product Group Name"].Value.ToString();
@@ -115,66 +120,28 @@ namespace MylanCustomizations
             sb.AppendLine("<table class=\"product-info-table\" cellpadding=\"4\" cellspacing=\"2\">");
             sb.AppendLine("<thead>");
             sb.AppendLine("<tr>");
-            sb.AppendLine("<td class=\"product-desc-title\">NDC</td>");
-            sb.AppendLine("<td class=\"product-desc-title\">Form</td>");
-            sb.AppendLine("<td class=\"product-desc-title\">Strength</td>");
-            switch (item.Fields["_ProductCategory"].Value.ToString())
+
+            foreach (Item child in templateItem.Children)
             {
-                case "BurnAndWoundCare":
-                    sb.AppendLine("<td class=\"product-desc-title\">Package</td>");
-                    sb.AppendLine("<td class=\"product-desc-title\">Boxes Per Case</td>");
-                    sb.AppendLine("<td class=\"product-desc-title\">Ordering Multiple</td>");
-                    break;
-                case "Cryopreserve Agent":
-                    sb.AppendLine("<td class=\"product-desc-title\">Fill Volume</td>");
-                    sb.AppendLine("<td class=\"product-desc-title\">Vial Size</td>");
-                    sb.AppendLine("<td class=\"product-desc-title\">Closure Size</td>");                   
-                    sb.AppendLine("<td class=\"product-desc-title\">Pack Size</td>"); 
-                    break;
-                case "Injectables":
-                    sb.AppendLine("<td class=\"product-desc-title\">Fill Volume</td>");
-                    sb.AppendLine("<td class=\"product-desc-title\">Vial Size</td>");
-                    sb.AppendLine("<td class=\"product-desc-title\">Closure Size</td>");
-                    sb.AppendLine("<td class=\"product-desc-title\">Pack Size</td>");
-                    break;
-                default:
-                    sb.AppendLine("<td class=\"product-desc-title\">Package</td>");
-                    break;
-               
+                if (item.Fields[child.Name].Value != null && !string.IsNullOrEmpty(item.Fields[child.Name].Value.ToString()))
+                {
+                    string displayName = item.Fields[child.Name].DisplayName.Replace("Attribute - ", "").Replace("Packaging - ", "").Replace("L1 - ", "").Replace("L2 - ", "");
+                    sb.AppendFormat("<td class=\"product-desc-title\">{0}</td>", displayName);
+                }
             }
+            
+            
             sb.AppendLine("</tr>");
             sb.AppendLine("</thead>");
             sb.AppendLine("<tbody>");
             sb.AppendLine("<tr class=\"grey-row\">");
-            sb.AppendFormat("<td nowrap>{0}</td>", item.Fields["_NDC"].Value.ToString());
-            sb.AppendFormat("<td>{0}</td>", item.Fields["_ProductDescription"].Value.ToString());
-            sb.AppendFormat("<td>{0}</td>", item.Fields["_xAttrStrength"].Value.ToString());
-            
-            switch (item.Fields["_ProductCategory"].Value.ToString())
+            foreach (Item child in templateItem.Children)
             {
-                case "BurnAndWoundCare":
-                    sb.AppendFormat("<td>{0}</td>", item.Fields["_xPkgPackage"].Value.ToString());
-                    sb.AppendFormat("<td>{0}</td>", item.Fields["_xPkgBoxesPerCase"].Value.ToString());
-                    sb.AppendFormat("<td>{0}</td>", item.Fields["_xPkgOrderingMultiple"].Value.ToString());
-                    break;
-                case "Cryopreserve Agent":
-                    sb.AppendFormat("<td>{0}</td>", item.Fields["_xAttrFillVolume"].Value.ToString());
-                    sb.AppendFormat("<td>{0}</td>", item.Fields["_xAttrVialSize"].Value.ToString());
-                    sb.AppendFormat("<td>{0}</td>", item.Fields["_xAttrClosureSize"].Value.ToString());
-                    sb.AppendFormat("<td>{0}</td>", item.Fields["_xPkgPackSize"].Value.ToString());
-                    break;
-                case "Injectables":
-                    sb.AppendFormat("<td>{0}</td>", item.Fields["_xAttrFillVolume"].Value.ToString());
-                    sb.AppendFormat("<td>{0}</td>", item.Fields["_xAttrVialSize"].Value.ToString());
-                    sb.AppendFormat("<td>{0}</td>", item.Fields["_xAttrClosureSize"].Value.ToString());
-                    sb.AppendFormat("<td>{0}</td>", item.Fields["_xPkgPackSize"].Value.ToString());
-                    break;
-                default:
-                    sb.AppendFormat("<td>{0}</td>", item.Fields["_xPkgPackage"].Value.ToString());
-                    break;
-
+                if (item.Fields[child.Name].Value != null && !string.IsNullOrEmpty(item.Fields[child.Name].Value.ToString()))
+                {
+                    sb.AppendFormat("<td>{0}</td>", item.Fields[child.Name].Value.ToString());
+                }
             }
-
             sb.AppendLine("</tr>");
             sb.AppendLine("</tbody>");
 

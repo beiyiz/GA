@@ -81,30 +81,36 @@ namespace mylan_institutional_products.Admin
             using (new Sitecore.SecurityModel.SecurityDisabler())
             {
                 List<ItemChangeHistory> changeList = GetItemChangeHistory(changeId, approvalStatus);
-                string itemId = changeList[0].ItemId;
 
-                Sitecore.Data.Database master = Sitecore.Configuration.Factory.GetDatabase("master");
-                Sitecore.Data.Database web = Sitecore.Configuration.Factory.GetDatabase("web");
-
-                Sitecore.Data.Items.Item item = master.Items.GetItem(itemId);
-                Sitecore.Data.Items.Item originalItem = web.Items.GetItem(itemId);
-
-
-                //Begin editing
-                item.Editing.BeginEdit();
-                try
+                if (changeList.Count > 0)
                 {
-                    foreach (ItemChangeHistory change in changeList)
+                    string itemId = changeList[0].ItemId;
+
+                    Sitecore.Data.Database master = Sitecore.Configuration.Factory.GetDatabase("master");
+                    Sitecore.Data.Database web = Sitecore.Configuration.Factory.GetDatabase("web");
+
+                    Sitecore.Data.Items.Item item = master.Items.GetItem(itemId);
+                    Sitecore.Data.Items.Item originalItem = web.Items.GetItem(itemId);
+
+
+                    //Begin editing
+                    item.Editing.BeginEdit();
+                    try
                     {
-                        string fieldName = change.FieldName;
-                        item.Fields[fieldName].Value = originalItem.Fields[fieldName].Value;
+                        foreach (ItemChangeHistory change in changeList)
+                        {
+                            string fieldName = change.FieldName;
+                            item.Fields[fieldName].Value = originalItem.Fields[fieldName].Value;
+                        }
+                    }
+                    finally
+                    {
+                        //Close the editing state
+                        item.Editing.EndEdit();
                     }
                 }
-                finally
-                {
-                    //Close the editing state
-                    item.Editing.EndEdit();
-                }
+
+                
             }
         }
         public List<ItemChangeHistory> GetItemChangeHistory(int? itemChangeId = null, string approvalStatus = null)

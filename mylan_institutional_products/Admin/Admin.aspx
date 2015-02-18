@@ -8,13 +8,23 @@
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
     <script type="text/javascript" src="scripts/jquery-2.1.3.min.js"></script>   
-   <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="scripts/html2canvas.js"></script>
+    <script type="text/javascript" src="scripts/FileSaver.js"></script>
 
+    <script type="text/javascript" src="scripts/jspdf.js"></script>
+    <script type="text/javascript" src="scripts/jspdf.plugin.addhtml.js"></script>
+    <script type="text/javascript" src="scripts/jspdf.plugin.addImage.js"></script>
+    <script type="text/javascript" src="scripts/jspdf.plugin.cell.js"></script>
+    <script type="text/javascript" src="scripts/jspdf.plugin.standard_fonts_metrics.js"></script>
+
+    
 
     <script type="text/javascript">
         $(document).ready(function () {
 
             $(".changeDetails").hide();
+            $(".divHtml").hide();
         });
 
         var displayHtml = function (changeId) {
@@ -23,6 +33,16 @@
 
         }
 
+        var viewPdf = function (changeId) {
+            $('#divHtml' + changeId).show();
+            var pdf = new jsPDF('p', 'pt', 'letter');
+            pdf.addHTML($('#divHtml' + changeId)[0], function () {
+                pdf.save($("#itemId" + changeId).val() + '.pdf');
+
+                $('#divHtml' + changeId).hide();
+            });
+
+        };
         var viewDetails = function (changeId) {
             $("#tblDetails" + changeId).toggle();
         }
@@ -70,7 +90,12 @@
 
             </tbody>
         </table>
+        <div class="hide" id="divHtml" runat="server">
 
+        </div>
+               
+
+        </div>
         <input type="hidden" id="hdnApprovedIds" runat="server" />
         <input type="hidden" id="hdnDeletedIds" runat="server"  />
 

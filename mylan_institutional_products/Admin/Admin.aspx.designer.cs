@@ -31,6 +31,15 @@ namespace mylan_institutional_products.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl tbChangeList;
         
         /// <summary>
+        /// divHtml control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divHtml;
+        
+        /// <summary>
         /// hdnApprovedIds control.
         /// </summary>
         /// <remarks>
