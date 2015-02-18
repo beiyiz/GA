@@ -79,7 +79,6 @@ namespace MylanCustomizations
                     newWarning.AppendFormat("<img src='/assets/MylanInstitutionalProducts/images/{0}.png' style='visibility:hidden; width:25px; padding-right:1px; padding-left:1px;' /> ", strTemp.Trim());
                 }
             }
-
             return newWarning.ToString();
         }
         
@@ -110,12 +109,19 @@ namespace MylanCustomizations
             sb.AppendLine("             <div class=\"title\">");
 
             sb.AppendFormat("               <a href='#'>{0}</a>", productName);
-            sb.AppendFormat("               <div class=\"product-warnings\"  style=\"float:right\">{0}</div>",createWarningImages(item.Fields["_xAttrWarnings"].Value.ToString()));
+            if (item.Fields["_xAttrWarnings"] != null)
+            {
+                sb.AppendFormat("               <div class=\"product-warnings\"  style=\"float:right\">{0}</div>", createWarningImages(item.Fields["_xAttrWarnings"].Value.ToString()));
+            }
+            
             sb.AppendLine("             </div>");
             sb.AppendLine("             <div class=\"product-info\">");
-            if (item.Fields["_xInfoPrescribingInformationLink"].Value.ToString().Length > 0)
+            if (item.Fields["_xInfoPrescribingInformationLink"] != null)
             {
-                sb.AppendFormat("<div class='product-prescribing-info'><a href='{0}' target='_new'>Full Prescribing Information</a></div>", item.Fields["_xInfoPrescribingInformationLink"].Value.ToString());
+                if (item.Fields["_xInfoPrescribingInformationLink"].Value.ToString().Length > 0)
+                {
+                    sb.AppendFormat("<div class='product-prescribing-info'><a href='{0}' target='_new'>Full Prescribing Information</a></div>", item.Fields["_xInfoPrescribingInformationLink"].Value.ToString());
+                }
             }
             sb.AppendLine("<table class=\"product-info-table\" cellpadding=\"4\" cellspacing=\"2\">");
             sb.AppendLine("<thead>");
@@ -123,10 +129,13 @@ namespace MylanCustomizations
 
             foreach (Item child in templateItem.Children)
             {
-                if (item.Fields[child.Name].Value != null && !string.IsNullOrEmpty(item.Fields[child.Name].Value.ToString()))
+                if (item.Fields[child.Name] != null)
                 {
-                    string displayName = item.Fields[child.Name].DisplayName.Replace("Attribute - ", "").Replace("Packaging - ", "").Replace("L1 - ", "").Replace("L2 - ", "");
-                    sb.AppendFormat("<td class=\"product-desc-title\">{0}</td>", displayName);
+                    if (item.Fields[child.Name].Value != null && !string.IsNullOrEmpty(item.Fields[child.Name].Value.ToString()))
+                    {
+                        string displayName = item.Fields[child.Name].DisplayName.Replace("Attribute - ", "").Replace("Packaging - ", "").Replace("L1 - ", "").Replace("L2 - ", "");
+                        sb.AppendFormat("<td class=\"product-desc-title\">{0}</td>", displayName);
+                    }
                 }
             }
             
@@ -137,9 +146,12 @@ namespace MylanCustomizations
             sb.AppendLine("<tr class=\"grey-row\">");
             foreach (Item child in templateItem.Children)
             {
-                if (item.Fields[child.Name].Value != null && !string.IsNullOrEmpty(item.Fields[child.Name].Value.ToString()))
+                if (item.Fields[child.Name] != null)
                 {
-                    sb.AppendFormat("<td>{0}</td>", item.Fields[child.Name].Value.ToString());
+                    if (item.Fields[child.Name].Value != null && !string.IsNullOrEmpty(item.Fields[child.Name].Value.ToString()))
+                    {
+                        sb.AppendFormat("<td>{0}</td>", item.Fields[child.Name].Value.ToString());
+                    }
                 }
             }
             sb.AppendLine("</tr>");
@@ -154,6 +166,7 @@ namespace MylanCustomizations
 
             return sb.ToString();
         }
+
         private int SaveItemChangeHistory(Item item, string changeType)
         {
             string html = string.Empty;
@@ -168,8 +181,11 @@ namespace MylanCustomizations
             if (product.Fields["Product Group Name"] == null) return changeId;
 
             productName = product.Fields["Product Group Name"].Value.ToString();
-
-            string productCategory = product.Parent.Fields["Category"].Value.ToString();
+            string productCategory = "";
+            if (product.Parent.Fields["Category"] != null)
+            {
+                productCategory = product.Parent.Fields["Category"].Value.ToString();
+            }
 
             spName = "dbo.SaveItemHistory";
 
@@ -188,12 +204,19 @@ namespace MylanCustomizations
                         if (changeType != "Deleted")
                         {
                             html = ProductInfoHtml(item);
-                            revision = item.Fields["__Revision"].Value.ToString();
                             command.Parameters.Add(new SqlParameter("@ItemHtml", html));
-                            command.Parameters.Add(new SqlParameter("@Revision", revision));
+                        }
+                        if (!String.IsNullOrEmpty(item.Fields["__Revision"].Value.ToString()))
+                        {
+                            revision = item.Fields["__Revision"].Value.ToString();
+                        }
+                        else
+                        {
+                            revision = "";
                         }
                         command.Parameters.Add(new SqlParameter("@ProductName", productName));
                         command.Parameters.Add(new SqlParameter("@ProductCategory", productCategory));
+                        command.Parameters.Add(new SqlParameter("@Revision", revision));
 
                         var returnParameter = command.Parameters.Add("@ReturnVal", SqlDbType.Int);
                         returnParameter.Direction = ParameterDirection.ReturnValue;
@@ -209,13 +232,11 @@ namespace MylanCustomizations
                     {
                         throw;
                     }
-                   
-
                 }
             }
-
             return changeId;
         }
+
         private void SaveItemHistoryDetails(int changeId, string fieldName, string oldValue, string newValue)
         {
 
@@ -238,8 +259,6 @@ namespace MylanCustomizations
                     command.ExecuteNonQuery();
                 }
             }
-
-            
         }
         protected void OnItemSaving(object sender, EventArgs args)
         {
@@ -321,7 +340,6 @@ namespace MylanCustomizations
             SaveItemChangeHistory(newItem, "Add");
         }
 
-
         private Item GetProductGroup(Item ndc)
         {
             if (ndc != null)
@@ -370,6 +388,7 @@ namespace MylanCustomizations
                 .Where(fieldName => newItem[fieldName] != originalItem[fieldName])
                 .ToList();
         }
+
         public override void Process(PublishItemContext context)
         {
             Sitecore.Data.ID itmID = context.ItemId;
