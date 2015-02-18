@@ -164,6 +164,9 @@ namespace MylanCustomizations
             int changeId = 0;
 
             Item product = item.Parent;
+
+            if (product.Fields["Product Group Name"] == null) return changeId;
+
             productName = product.Fields["Product Group Name"].Value.ToString();
 
             string productCategory = product.Parent.Fields["Category"].Value.ToString();
@@ -266,18 +269,21 @@ namespace MylanCustomizations
             if (differences.Count > 0){
 
                 int changeId = SaveItemChangeHistory(newItem, "Update");
-                string ConnectionString = Sitecore.Configuration.Settings.GetConnectionString("custom");
-
-                foreach (String fieldName in differences)
+                if (changeId > 0)
                 {
-                    var fieldNameModified = fieldName.ToString().Replace("_x", "");
-                    fieldNameModified = fieldName.ToString().Replace("_", "");
-
-                    if (fieldNameModified.ToLower() != "updated" && fieldNameModified.ToLower() != "revision")
+                    foreach (String fieldName in differences)
                     {
-                        SaveItemHistoryDetails(changeId, fieldName, originalItem.Fields[fieldName].Value.ToString(), newItem.Fields[fieldName].Value.ToString());
-                    }
-                }   
+                        var fieldNameModified = fieldName.ToString().Replace("_x", "");
+                        fieldNameModified = fieldName.ToString().Replace("_", "");
+
+                        if (fieldNameModified.ToLower() != "updated" && fieldNameModified.ToLower() != "revision")
+                        {
+                            SaveItemHistoryDetails(changeId, fieldName, originalItem.Fields[fieldName].Value.ToString(), newItem.Fields[fieldName].Value.ToString());
+                        }
+                    }   
+                }
+
+                
             }
 
         }
