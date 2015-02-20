@@ -52,11 +52,11 @@ namespace MylanCustomizations
 
             if (!String.IsNullOrWhiteSpace(strCTemp))
             {
-                newWarning.AppendFormat("<img src='/assets/MylanInstitutionalProducts/images/{0}.png' style='width:25px; padding-right:1px; padding-left:1px;' /> ", strCTemp.Trim());
+                newWarning.AppendFormat("<img src='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/images/{0}.png' style='width:25px; padding-right:1px; padding-left:1px;' /> ", strCTemp.Trim());
             }
             else
             {
-                newWarning.AppendFormat("<img src='/assets/MylanInstitutionalProducts/images/{0}.png' style='visibility:hidden; width:25px; padding-right:1px; padding-left:1px;' /> ", strCTemp.Trim());
+                newWarning.AppendFormat("<img src='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/images/{0}.png' style='visibility:hidden; width:25px; padding-right:1px; padding-left:1px;' /> ", strCTemp.Trim());
             }
 
             foreach (String aWarning in Warnings)
@@ -72,11 +72,11 @@ namespace MylanCustomizations
                 }
                 if (!String.IsNullOrWhiteSpace(strTemp))
                 {
-                    newWarning.AppendFormat("<img src='/assets/MylanInstitutionalProducts/images/{0}.png' style='width:25px; padding-right:1px; padding-left:1px;' /> ", strTemp.Trim());
+                    newWarning.AppendFormat("<img src='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/images/{0}.png' style='width:25px; padding-right:1px; padding-left:1px;' /> ", strTemp.Trim());
                 }
                 else
                 {
-                    newWarning.AppendFormat("<img src='/assets/MylanInstitutionalProducts/images/{0}.png' style='visibility:hidden; width:25px; padding-right:1px; padding-left:1px;' /> ", strTemp.Trim());
+                    newWarning.AppendFormat("<img src='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/images/{0}.png' style='visibility:hidden; width:25px; padding-right:1px; padding-left:1px;' /> ", strTemp.Trim());
                 }
             }
             return newWarning.ToString();
