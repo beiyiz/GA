@@ -97,8 +97,6 @@ namespace MylanCustomizations
 
             sb.AppendLine("<html>");
             sb.AppendLine("<head>");
-            sb.AppendLine("<link rel=\"stylesheet\" href='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/styles/normalize.css' />");
-            sb.AppendLine("<link rel=\"stylesheet\" href='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/styles/main.css' />");
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
                
