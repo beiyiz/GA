@@ -85,28 +85,16 @@ namespace mylan_institutional_products.Admin
                     revision = change.Revision;
                     changeId = change.ItemChangeId;
 
-                    HtmlGenericControl div = new HtmlGenericControl();
-                    div = this.Clone(div, divHtml) as HtmlGenericControl;
+                    //divHtml.InnerHtml += "<p />" + change.ItemHtml;
 
-                    div.ID = "divHtml" + change.ItemChangeId;
-                    div.InnerHtml = change.ItemHtml;
-                    div.Attributes.Add("class", "divHtml");
-                    this.Controls.Add(div);
-
-                    HtmlInputHidden hdn = new HtmlInputHidden();
-                    hdn.ID = "itemId" + change.ItemChangeId;
-                    hdn.Value = change.ItemId;
-
-                    this.Controls.Add(hdn);
-
-                    string viewHtml = string.Format("<input type='button' value=' View Html ' onclick='displayHtml({0})' />", change.ItemChangeId);
-                    string viewPDF = string.Format("<input type='button' value=' Download PDF ' onclick='viewPdf({0})' />", change.ItemChangeId);
+                    //string viewHtml = string.Format("<input type='button' value=' View Html ' onclick='displayHtml({0})' />", change.ItemChangeId);
+                    //string viewPDF = string.Format("<input type='button' value=' Download PDF ' onclick='viewPdf({0})' />", change.ItemChangeId);
                     string viewDetails = string.Format("<input type='button' value=' Change Details ' onclick='viewDetails({0})' />", change.ItemChangeId);
 
                     string actionApprove = string.Format("<input type=\"radio\" class=\"actionApprove\" name=\"action{0}\" value=\"{0}\" /> Approve", changeId);
                     string actionDelete = string.Format("<input type=\"radio\" class=\"actionDelete\" name=\"action{0}\" value=\"{0}\" /> Delete", changeId);
 
-                    sb.AppendFormat("<tr><td>{8}</td><td>{1}</td><td>{0}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6} {7}</td></tr>", change.ItemName, change.ProductName, change.ChangeType, change.ChangeDate, viewPDF, viewDetails, actionApprove, actionDelete, change.ProductCategory);
+                    sb.AppendFormat("<tr><td>{7}</td><td>{1}</td><td>{0}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td></tr>", change.ItemName, change.ProductName, change.ChangeType, change.ChangeDate, viewDetails, actionApprove, actionDelete, change.ProductCategory);
                     sbDetails = new StringBuilder();
                 }
 
