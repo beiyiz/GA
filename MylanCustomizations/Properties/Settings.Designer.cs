@@ -58,5 +58,23 @@ namespace MylanCustomizations.Properties {
                 return ((global::System.Guid)(this["ProductUpdateCustomerKey"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("bffdb9d4-4e9a-4b86-b786-c17e1aa6f6b4")]
+        public global::System.Guid SubscribersCustomerKey {
+            get {
+                return ((global::System.Guid)(this["SubscribersCustomerKey"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("a998bd8c-af0b-487e-bbd3-24e1fbcc2b4f")]
+        public global::System.Guid OptInCustomerKey {
+            get {
+                return ((global::System.Guid)(this["OptInCustomerKey"]));
+            }
+        }
     }
 }
