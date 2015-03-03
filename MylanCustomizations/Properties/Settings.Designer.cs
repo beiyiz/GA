@@ -43,7 +43,7 @@ namespace MylanCustomizations.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10b5ce3e-d76c-483c-be20-c456e9957575")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3ac34660-e42c-4c2e-9f25-c5017b3820e0")]
         public global::System.Guid NewProductDECustomerKey {
             get {
                 return ((global::System.Guid)(this["NewProductDECustomerKey"]));
@@ -52,7 +52,7 @@ namespace MylanCustomizations.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("85a648a8-55df-440e-8f1d-2bf5af9f1399")]
+        [global::System.Configuration.DefaultSettingValueAttribute("d214c45e-731e-4155-8c02-17b934cab91d")]
         public global::System.Guid ProductUpdateCustomerKey {
             get {
                 return ((global::System.Guid)(this["ProductUpdateCustomerKey"]));
