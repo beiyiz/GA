@@ -52,11 +52,11 @@ namespace MylanCustomizations
 
             if (!String.IsNullOrWhiteSpace(strCTemp))
             {
-                newWarning.AppendFormat("<img src='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/images/{0}.png' style='width:25px; padding-right:1px; padding-left:1px;' /> ", strCTemp.Trim());
+                newWarning.AppendFormat("<img src='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/images/{0}.png' style='width:26px; height:26px; padding-right:1px; padding-left:1px;' /> ", strCTemp.Trim());
             }
             else
             {
-                newWarning.AppendFormat("<img src='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/images/{0}.png' style='visibility:hidden; width:25px; padding-right:1px; padding-left:1px;' /> ", strCTemp.Trim());
+                newWarning.AppendFormat("<img src='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/images/{0}.png' style='visibility:hidden; width:26px; height:26px; padding-right:1px; padding-left:1px;' /> ", strCTemp.Trim());
             }
 
             foreach (String aWarning in Warnings)
@@ -72,11 +72,11 @@ namespace MylanCustomizations
                 }
                 if (!String.IsNullOrWhiteSpace(strTemp))
                 {
-                    newWarning.AppendFormat("<img src='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/images/{0}.png' style='width:25px; padding-right:1px; padding-left:1px;' /> ", strTemp.Trim());
+                    newWarning.AppendFormat("<img src='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/images/{0}.png' style='width:25px; padding-right:1px; padding-left:1px;' valign=\"middle\" /> ", strTemp.Trim());
                 }
                 else
                 {
-                    newWarning.AppendFormat("<img src='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/images/{0}.png' style='visibility:hidden; width:25px; padding-right:1px; padding-left:1px;' /> ", strTemp.Trim());
+                    newWarning.AppendFormat("<img src='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/images/{0}.png' style='visibility:hidden; width:25px; padding-right:1px; padding-left:1px;' valign=\"middle\" /> ", strTemp.Trim());
                 }
             }
             return newWarning.ToString();
@@ -95,38 +95,48 @@ namespace MylanCustomizations
 
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine("<html>");
-            sb.AppendLine("<head>");
-            sb.AppendLine("<link rel=\"stylesheet\" href='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/styles/normalize.css' />");
-            sb.AppendLine("<link rel=\"stylesheet\" href='http://mylaninstitutional-usproducts.com/assets/MylanInstitutionalProducts/styles/main.css' />");
-            sb.AppendLine("</head>");
-            sb.AppendLine("<body>");
-               
-            sb.AppendLine("<div id=\"div_ProductDisplay\">");
-            sb.AppendLine(  "<ul class=\"products\">");
-            sb.AppendLine("     <li class=\"odd first\">");
-            sb.AppendLine("         <div class=\"product-title\">");
-            sb.AppendLine("             <div class=\"title\">");
+            sb.AppendLine("<table width=\"580\" border=\"0\" cellpadding=\"5\" bgcolor=\"#e6e6e6\" align=\"center\" style=\"font-size:13px;\"><tbody>");
+            sb.AppendLine("<tr>");
+            sb.AppendLine("<td style=\"color:#000000;padding-left:10px;font-size:16px;font-family:Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif;\">");
 
-            sb.AppendFormat("               <a href='#'>{0}</a>", productName);
+            sb.AppendFormat("<strong>{0}</strong>", productName);
             if (item.Fields["_xAttrWarnings"] != null)
             {
-                sb.AppendFormat("               <div class=\"product-warnings\"  style=\"float:right\">{0}</div>", createWarningImages(item.Fields["_xAttrWarnings"].Value.ToString()));
+                sb.AppendFormat("{0}", createWarningImages(item.Fields["_xAttrWarnings"].Value.ToString()));
             }
-            
-            sb.AppendLine("             </div>");
-            sb.AppendLine("             <div class=\"product-info\">");
+
+            sb.AppendLine("</td></tr>");
+            sb.AppendLine("<tr><td style=\"border:0px #666666;font-size:14px;color:#94cee6;font-family:Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif;text-align:center;\">");
+            sb.AppendLine("<table width=\"560\" border=\"0\" cellpadding=\"6\" bgcolor=\"#ffffff\">");
+            sb.AppendLine("<tbody style=\"text-align:left;font-family:Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:14px;border:0px #666666;\">");
+
+            int attributeCount = 0;
+            int columnSize = 0;
+            foreach (Item child in templateItem.Children)
+            {
+                if (item.Fields[child.Name] != null)
+                {
+                    if (item.Fields[child.Name].Value != null && !string.IsNullOrEmpty(item.Fields[child.Name].Value.ToString()))
+                    {
+                        attributeCount++;
+                    }
+                }
+            }
+            if (attributeCount != 0)
+            {
+                columnSize = 560 / attributeCount;
+            }
+
             if (item.Fields["_xInfoPrescribingInformationLink"] != null)
             {
                 if (item.Fields["_xInfoPrescribingInformationLink"].Value.ToString().Length > 0)
                 {
-                    sb.AppendFormat("<div class='product-prescribing-info'><a href='{0}' target='_new'>Full Prescribing Information</a></div>", item.Fields["_xInfoPrescribingInformationLink"].Value.ToString());
+                    sb.AppendFormat("<tr><td colspan=\"{0}\" style=\"color:#000000;padding-left:5px;text-align:left;\">", attributeCount);
+                    sb.AppendFormat("<font face=\"Arial\" size=\"2\"><a href=\"{0}\" title=\"Full Prescribing Information\" alias=\"Full Prescribing Information\" conversion=\"false\">Full Prescribing Information</a></font><span style=\"font-family:arial;font-size:14px;\">&nbsp;</span>", item.Fields["_xInfoPrescribingInformationLink"].Value.ToString());
+                    sb.AppendLine("</td></tr>");
                 }
             }
-            sb.AppendLine("<table class=\"product-info-table\" cellpadding=\"4\" cellspacing=\"2\">");
-            sb.AppendLine("<thead>");
-            sb.AppendLine("<tr>");
-
+            sb.AppendLine("<tr>");            
             foreach (Item child in templateItem.Children)
             {
                 if (item.Fields[child.Name] != null)
@@ -134,36 +144,28 @@ namespace MylanCustomizations
                     if (item.Fields[child.Name].Value != null && !string.IsNullOrEmpty(item.Fields[child.Name].Value.ToString()))
                     {
                         string displayName = item.Fields[child.Name].DisplayName.Replace("Attribute - ", "").Replace("Packaging - ", "").Replace("L1 - ", "").Replace("L2 - ", "");
-                        sb.AppendFormat("<td class=\"product-desc-title\">{0}</td>", displayName);
+                        if (displayName.Contains("("))
+                        {
+                            displayName = displayName.Substring(0, displayName.IndexOf('(')); // To exclude '(For Injectibles Only)' from the attribute headers
+                        }
+                        sb.AppendFormat(" <td width=\"{0}\" style=\"text-align:left;\"><strong><font face=\"Arial\" size=\"2\" color=\"#000000\" align=\"left\">{1}</font></strong></td>", columnSize, displayName);
                     }
                 }
             }
-            
-            
-            sb.AppendLine("</tr>");
-            sb.AppendLine("</thead>");
-            sb.AppendLine("<tbody>");
-            sb.AppendLine("<tr class=\"grey-row\">");
+
+            sb.AppendFormat(" </tr></tbody><tbody><tr><td colspan=\"{0}\" style=\"color:#000000;font-size:14px;font-family:arial;padding-left:5px;\">", attributeCount);
+            sb.AppendLine("<table width=\"580\" border=\"1\" cellpadding=\"5\" cellspacing=\"0\" bgcolor=\"#beeef8\"><tbody><tr>");
             foreach (Item child in templateItem.Children)
             {
                 if (item.Fields[child.Name] != null)
                 {
                     if (item.Fields[child.Name].Value != null && !string.IsNullOrEmpty(item.Fields[child.Name].Value.ToString()))
                     {
-                        sb.AppendFormat("<td>{0}</td>", item.Fields[child.Name].Value.ToString());
+                        sb.AppendFormat("<td width=\"{0}\" style=\"text-align:left;\"><font face=\"Arial\" size=\"2\" align=\"left\">{1}</font></td>", columnSize, item.Fields[child.Name].Value.ToString());
                     }
                 }
             }
-            sb.AppendLine("</tr>");
-            sb.AppendLine("</tbody>");
-
-            sb.AppendLine("</table>");
-
-            sb.AppendLine("</div></div></li></ul></div>");
-
-            sb.AppendLine("</body>");
-            sb.AppendLine("</html>");
-
+            sb.AppendLine("</tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table>");
             return sb.ToString();
         }
 
