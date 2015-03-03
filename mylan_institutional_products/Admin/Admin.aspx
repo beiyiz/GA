@@ -24,22 +24,23 @@
         $(document).ready(function () {
 
             $(".changeDetails").hide();
-            $(".divHtml").hide();
+            $("#divHtml").hide();
         });
 
-        var displayHtml = function (changeId) {
+        var displayHtml = function () {
 
-            var win = window.open("ViewHtml.aspx?changeId=" + changeId, "Preview Item Change", "target=_new, width=1100, height=300");
+            var win = window.open("ViewHtml.aspx", "Preview Product Changes", "target=_new, width=1100, height=500");
 
         }
 
-        var viewPdf = function (changeId) {
-            $('#divHtml' + changeId).show();
+        var viewPdf = function () {
+            $('#divHtml').show();
             var pdf = new jsPDF('p', 'pt', 'letter');
-            pdf.addHTML($('#divHtml' + changeId)[0], function () {
-                pdf.save($("#itemId" + changeId).val() + '.pdf');
+            pdf.addHTML($('#divHtml')[0], function () {
+                var today = new Date();
+                pdf.save( today + '.pdf');
 
-                $('#divHtml' + changeId).hide();
+                $('#divHtml').hide();
             });
 
         };
@@ -90,7 +91,7 @@
 
             </tbody>
         </table>
-        <div class="hide" id="divHtml" runat="server">
+        <div id="divHtml" runat="server">
 
         </div>
                
@@ -100,7 +101,10 @@
         <input type="hidden" id="hdnDeletedIds" runat="server"  />
 
     </div>
+        <input type="button" id="btnPDF" class="btn btn-default btn-success" value="Download PDF"  onclick="displayHtml()"/>
+
     <input type="button" id="btnSubmit" class="btn btn-default btn-success" value="Submit"  onclick="adminApproval()"/>
+
     </form>
 </body>
 </html>

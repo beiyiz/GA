@@ -14,5 +14,11 @@
     <Setting Name="ProductUpdateCustomerKey" Type="System.Guid" Scope="Application">
       <Value Profile="(Default)">d214c45e-731e-4155-8c02-17b934cab91d</Value>
     </Setting>
+    <Setting Name="SubscribersCustomerKey" Type="System.Guid" Scope="Application">
+      <Value Profile="(Default)">bffdb9d4-4e9a-4b86-b786-c17e1aa6f6b4</Value>
+    </Setting>
+    <Setting Name="OptInCustomerKey" Type="System.Guid" Scope="Application">
+      <Value Profile="(Default)">a998bd8c-af0b-487e-bbd3-24e1fbcc2b4f</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

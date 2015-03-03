@@ -60,7 +60,40 @@ namespace MylanCustomizations.ExactTargetClient
             return grAllSP.Results;
 
         }
-        
+        public void InsertSubscribers(List<string> productCategories, string firstName, string lastName, string emailAddress)
+        {
+            string subscribersCustomerKey = Properties.Settings.Default.SubscribersCustomerKey.ToString();
+
+            //List<ET_DataExtensionColumn> cols = RetrieveAllColumnsOfDataExtension(subscribersCustomerKey);
+
+            List<KeyValuePair<string, string>> colVals = new List<KeyValuePair<string, string>>();
+
+            colVals.Add(new KeyValuePair<string, string>("First_Name", firstName));
+            colVals.Add(new KeyValuePair<string, string>("Last_Name", lastName));
+            colVals.Add(new KeyValuePair<string, string>("Email", emailAddress));
+            PostReturnStatus retStatus = AddDataRowToDataExtension(subscribersCustomerKey, colVals);
+
+
+            string optInCustomerKey = Properties.Settings.Default.OptInCustomerKey.ToString();
+
+            //List<ET_DataExtensionColumn> cols = RetrieveAllColumnsOfDataExtension(optInCustomerKey);
+
+            foreach (string productCategory in productCategories)
+            {
+                if (!string.IsNullOrEmpty(productCategory))
+                {
+                    List<KeyValuePair<string, string>> columnValues = new List<KeyValuePair<string, string>>();
+
+                    columnValues.Add(new KeyValuePair<string, string>("Product_cat", productCategory));
+                    columnValues.Add(new KeyValuePair<string, string>("Email", emailAddress));
+                    PostReturnStatus status = AddDataRowToDataExtension(optInCustomerKey, columnValues);
+                }
+
+            }
+           
+
+            
+        }
         public void InsertIntoDataExtension(string html, string changeType, string productCategory)
         {
             string customerKey = Properties.Settings.Default.NewProductDECustomerKey.ToString();

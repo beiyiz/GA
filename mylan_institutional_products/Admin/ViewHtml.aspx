@@ -25,6 +25,9 @@
 
         };
 
+        $(document).ready(function () {
+            viewPdf();
+        });
     </script>
 </head>
 <body>
@@ -32,7 +35,7 @@
     <div id="divHtml" runat="server">
     
     </div>
-        <input type="button" value=" Download PDF " onclick="viewPdf();" />
+       <%-- <input type="button" value=" Download PDF " onclick="viewPdf();" />--%>
        <input type="hidden" id="hdnItemId" runat="server" />
     </form>
 </body>

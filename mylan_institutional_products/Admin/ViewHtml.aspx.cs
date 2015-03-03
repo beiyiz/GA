@@ -12,20 +12,16 @@ namespace mylan_institutional_products.Admin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Request.QueryString["changeId"] != null)
-            {
-                int changeId = int.Parse(Request.QueryString["changeId"].ToString());
-
+            
                 ItemChangeHistoryData data = new ItemChangeHistoryData();
 
-                var changeList = data.GetItemChangeHistory(changeId);
-
-                string html = changeList[0].ItemHtml;
-
-                divHtml.InnerHtml = html;
-
-                hdnItemId.Value = changeList[0].ItemId.Replace("{", "").Replace("}", "");
-            }
+                var changeList = data.GetItemChangeHistory();
+                foreach (var change in changeList)
+                {
+                    divHtml.InnerHtml += "<p/>" + change.ItemHtml;
+                }
+                hdnItemId.Value = DateTime.Now.ToShortDateString() + DateTime.Now.ToShortTimeString();
+            
             
         }
 
