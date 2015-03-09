@@ -1,4 +1,4 @@
-﻿<%@ Page Language="c#" CodePage="65001" EnableEventValidation="false"  AutoEventWireup="true" %>
+﻿<%@ Page Language="c#" CodePage="65001" AutoEventWireup="true" EnableEventValidation="false" %>
 
 <%@ Register TagPrefix="sc" Namespace="Sitecore.Web.UI.WebControls" Assembly="Sitecore.Kernel" %>
 <%@ OutputCache Location="None" VaryByParam="none" %>
@@ -82,11 +82,10 @@
 
                 <div id="search-head-box" class="head-black-bg">
                     <div class="head-icons" id="search-box">
-                        <a onmouseup="revealSearch();">
-                            <img id="search-icon" src="/assets/MylanInstitutionalProducts/images/search.png" alt="search-icon" /></a>
+                        <a onmouseup="revealSearch();"><img id="search-icon" src="/assets/MylanInstitutionalProducts/images/search.png" alt="search-icon" /></a>
                         <div class="head-icons" id="search-form">
-                            <input type="text" id="SearchTerm" placeholder="Search Product List" onkeyup="if (event.keyCode == 13) {submitSearch(); return false;}" />
-                            <input type="button" value="Go" id="search-btn" onmouseup="submitSearch(); return false;" />
+                            <input type="text" id="SearchTerm" placeholder="Search Product List" onkeyup="if (event.keyCode == 13) {submitSearch('SearchTerm'); return false;}" />
+                            <input type="button" value="Go" id="search-btn" onmouseup="submitSearch('SearchTerm'); return false;" />
                         </div>
                     </div>
                 </div>
@@ -114,12 +113,12 @@
                         <li>The Mylan logo is a registered trademark of Mylan Inc.</li>
                         <li>The trademarks displayed on this web page not registered to Mylan Inc. are the property of their respective owners.</li>
                     </ul>
-                    <div id="info-phone" class="grey-bar">For more information call 800.848.0462</div>
+                    <div id="info-phone" class="grey-bar">For more information call 1.800.848.0462</div>
                     <div id="sign-up"><a href="/MylanInstitutionalProducts/updates">Sign Up for Product Updates</a></div>
                     <div class="black" id="bottom-links">
-                        <div id="copyright">&copy;2014 Mylan Institutional</div>
+                        <div id="copyright">&copy;2015 Mylan Institutional</div>
                         <div id="disclaimer"><a href="http://mylan.com/disclaimer.aspx">Copyright and Legal Disclaimer</a> &nbsp;|&nbsp; <a href="http://mylan.com/privacy.aspx">Privacy Policy</a> &nbsp;|&nbsp; <a href="/MylanInstitutionalProducts/Help">Help</a></div>
-                        <div id="last-updated">Last Updated 12/2014</div>
+                        <div id="last-updated">Last Updated 01/2015</div>
                     </div>
                 </div>
             </div>
