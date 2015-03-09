@@ -47,7 +47,6 @@ public partial class jsonProductList : System.Web.UI.Page
         return dv.ToTable(true, "ProductName");
     }
 
-
     private DataTable getProductData()
     {
         String ProductName = Request.QueryString["q"];
@@ -101,7 +100,6 @@ public partial class jsonProductList : System.Web.UI.Page
                     {
                         if (ndc.Fields["_NDC"].Value.ToString().StartsWith(ProductName.ToString()))
                         {
-                            //value = ndc.Fields["_NDC"].Value.ToString().Trim().Replace("<sup>", "").Replace("</sup>", "");
                             value = product.Fields["Product Group Name"].Value.ToString().Trim().Replace("<sup>", "").Replace("</sup>", "");
                             break;
                         }
