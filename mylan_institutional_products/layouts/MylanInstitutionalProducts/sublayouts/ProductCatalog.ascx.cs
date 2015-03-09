@@ -872,8 +872,7 @@ namespace Layouts.Productcatalog
                                 int i = productCategory.Children.Count;
                                 foreach (Item ndc in product.Children)
                                 {
-                                    //string strWholesalerName = "NA";
-                                    string strWholesalerNumber = "NA";
+                                    string strWholesalerNumber = "N/A";
 
                                     try
                                     {
@@ -1024,8 +1023,7 @@ namespace Layouts.Productcatalog
                             dr["AlternateTitle"] = product.Fields["alternateNDCTitle"].Value;
                             dr["ProductName"] = "prod_" + replaceSpecialChars(product.ID.ToString());
 
-                            //string strWholesalerName = "NA";
-                            string strWholesalerNumber = "NA";
+                            string strWholesalerNumber = "N/A";
 
                             try
                             {
