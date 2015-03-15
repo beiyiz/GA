@@ -270,7 +270,7 @@ namespace MylanCustomizations
             }
 
             Item newItem = Event.ExtractParameter(args, 0) as Item;
-            if (newItem == null)
+            if (newItem == null || newItem.TemplateName != "Product")
             {
                 return;
             }
@@ -279,17 +279,19 @@ namespace MylanCustomizations
 
             Item originalItem = web.Items.GetItem(newItem.ID);
 
+            string changeType = "Update";
             if (originalItem == null)
             {
+                changeType = "Add";
                 originalItem = newItem.Database.GetItem(newItem.ID, newItem.Language, newItem.Version);
             }
 
             var differences = FindDifferences(newItem, originalItem);
 
 
-            if (differences.Count > 0){
+            if (differences.Count > 0 || originalItem.Name != newItem.Name){
 
-                int changeId = SaveItemChangeHistory(newItem, "Update");
+                int changeId = SaveItemChangeHistory(newItem, changeType);
                 if (changeId > 0)
                 {
                     foreach (String fieldName in differences)
@@ -297,11 +299,16 @@ namespace MylanCustomizations
                         var fieldNameModified = fieldName.ToString().Replace("_x", "");
                         fieldNameModified = fieldName.ToString().Replace("_", "");
 
-                        if (fieldNameModified.ToLower() != "updated" && fieldNameModified.ToLower() != "revision")
+                        if (fieldNameModified.ToLower() != "created" && fieldNameModified.ToLower() != "updated" && fieldNameModified.ToLower() != "revision")
                         {
                             SaveItemHistoryDetails(changeId, fieldName, originalItem.Fields[fieldName].Value.ToString(), newItem.Fields[fieldName].Value.ToString());
                         }
-                    }   
+                    }
+                    if (originalItem.Name != newItem.Name)
+                    {
+                        SaveItemHistoryDetails(changeId, "ItemName", originalItem.Name, newItem.Name);
+
+                    }
                 }
 
                 
@@ -339,7 +346,12 @@ namespace MylanCustomizations
                 return;
             }
 
-            SaveItemChangeHistory(newItem, "Add");
+
+            int changeId = SaveItemChangeHistory(newItem, "Add");
+            if (changeId > 0)
+            {
+                SaveItemHistoryDetails(changeId, "ItemName", string.Empty, newItem.Name);
+            }
         }
 
         private Item GetProductGroup(Item ndc)

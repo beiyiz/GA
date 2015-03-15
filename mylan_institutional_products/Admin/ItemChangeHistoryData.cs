@@ -92,22 +92,25 @@ namespace mylan_institutional_products.Admin
                     Sitecore.Data.Items.Item item = master.Items.GetItem(itemId);
                     Sitecore.Data.Items.Item originalItem = web.Items.GetItem(itemId);
 
-
-                    //Begin editing
-                    item.Editing.BeginEdit();
-                    try
+                    if (originalItem != null)
                     {
-                        foreach (ItemChangeHistory change in changeList)
+                        //Begin editing
+                        item.Editing.BeginEdit();
+                        try
                         {
-                            string fieldName = change.FieldName;
-                            item.Fields[fieldName].Value = originalItem.Fields[fieldName].Value;
+                            foreach (ItemChangeHistory change in changeList)
+                            {
+                                string fieldName = change.FieldName;
+                                item.Fields[fieldName].Value = originalItem.Fields[fieldName].Value;
+                            }
+                        }
+                        finally
+                        {
+                            //Close the editing state
+                            item.Editing.EndEdit();
                         }
                     }
-                    finally
-                    {
-                        //Close the editing state
-                        item.Editing.EndEdit();
-                    }
+                    
                 }
 
                 

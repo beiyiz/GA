@@ -33,24 +33,29 @@ BEGIN
  declare @ChangeID int;
  declare @existedChangeId int
  declare @existedChangeType varchar(50)
+ declare @approvalStatus varchar(50)
 
- select @existedChangeId = ItemChangeId, @existedChangeType=ChangeType, @ChangeID = ItemChangeId
+ select @existedChangeId = ItemChangeId, @existedChangeType=ChangeType, @ChangeID = ItemChangeId, @approvalStatus = ApprovalStatus
  from [dbo].[ItemChangeHistory]
  where [ItemID] = @ItemID
 
- if (@existedChangeId is not null and @existedChangeType = 'Update') 
+ if (@existedChangeId is not null and (@existedChangeType = 'Update' or @approvalStatus = 'Deleted')) 
  begin
 	delete from [dbo].[ItemChangeDetails] where [ItemChangeId] = @existedChangeId;
 	delete from [dbo].[ItemChangeHistory] where [ItemChangeId] = @existedChangeId;
  end
 
-  if (@existedChangeId is not null and @existedChangeType = 'Add') 
+  if (@existedChangeId is not null and @existedChangeType = 'Add' and @approvalStatus is null) 
 	  begin
 		UPDATE [dbo].[ItemChangeHistory]
 		SET
 			ItemName = @ItemName,
 			ItemHtml = @ItemHtml
-		where [ItemID] = @ItemID	
+		WHERE [ItemID] = @ItemID	
+
+		DELETE [dbo].[ItemChangeDetails]
+		WHERE [ItemChangeId] = @existedChangeId AND
+			  [FieldName] = 'ItemName';
 	  end
   else
 	  begin
