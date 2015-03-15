@@ -39,26 +39,14 @@ BEGIN
  from [dbo].[ItemChangeHistory]
  where [ItemID] = @ItemID
 
- if (@existedChangeId is not null and (@existedChangeType = 'Update' or @approvalStatus = 'Deleted')) 
+ if (@existedChangeId is not null and  @approvalStatus is null) 
  begin
+	set @ChangeType = @existedChangeType;
 	delete from [dbo].[ItemChangeDetails] where [ItemChangeId] = @existedChangeId;
 	delete from [dbo].[ItemChangeHistory] where [ItemChangeId] = @existedChangeId;
  end
 
-  if (@existedChangeId is not null and @existedChangeType = 'Add' and @approvalStatus is null) 
-	  begin
-		UPDATE [dbo].[ItemChangeHistory]
-		SET
-			ItemName = @ItemName,
-			ItemHtml = @ItemHtml
-		WHERE [ItemID] = @ItemID	
-
-		DELETE [dbo].[ItemChangeDetails]
-		WHERE [ItemChangeId] = @existedChangeId AND
-			  [FieldName] = 'ItemName';
-	  end
-  else
-	  begin
+  
 			INSERT INTO [dbo].[ItemChangeHistory]
 				   ([ItemID]  
 				   ,ItemName         
@@ -80,7 +68,7 @@ BEGIN
 				   ,@ProductCategory);
 
 			select @ChangeID=ID from @ItemChangeId;
-		end
+		
 
 
 

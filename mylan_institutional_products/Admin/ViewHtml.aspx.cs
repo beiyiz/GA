@@ -13,14 +13,20 @@ namespace mylan_institutional_products.Admin
         protected void Page_Load(object sender, EventArgs e)
         {
             
-                ItemChangeHistoryData data = new ItemChangeHistoryData();
+            ItemChangeHistoryData data = new ItemChangeHistoryData();
 
-                var changeList = data.GetItemChangeHistory();
-                foreach (var change in changeList)
+            var changeList = data.GetItemChangeHistory();
+
+            int changeId = 0;
+            foreach (var change in changeList)
+            {
+                if (changeId != change.ItemChangeId)
                 {
                     divHtml.InnerHtml += "<p/>" + change.ItemHtml;
+                    changeId = change.ItemChangeId;
                 }
-                hdnItemId.Value = DateTime.Now.ToShortDateString() + DateTime.Now.ToShortTimeString();
+            }
+            hdnItemId.Value = DateTime.Now.ToShortDateString() + DateTime.Now.ToShortTimeString();
             
             
         }

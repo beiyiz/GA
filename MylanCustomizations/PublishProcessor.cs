@@ -249,16 +249,23 @@ namespace MylanCustomizations
             {
                 using (SqlCommand command = new SqlCommand(spName, connection))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
+                    try
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
 
-                    command.Parameters.Add("@ItemChangeID", SqlDbType.Int).Value = changeId;
-                    command.Parameters.Add(new SqlParameter("@FieldName", fieldName));
-                    command.Parameters.Add(new SqlParameter("@OldValue", oldValue)); 
-                    command.Parameters.Add(new SqlParameter("@NewValue", newValue));
+                        command.Parameters.Add("@ItemChangeID", SqlDbType.Int).Value = changeId;
+                        command.Parameters.Add(new SqlParameter("@FieldName", fieldName));
+                        command.Parameters.Add(new SqlParameter("@OldValue", oldValue));
+                        command.Parameters.Add(new SqlParameter("@NewValue", newValue));
 
-                    connection.Open();
+                        connection.Open();
 
-                    command.ExecuteNonQuery();
+                        command.ExecuteNonQuery();
+                    }
+                    catch(Exception ex)
+                    {
+                        throw;
+                    }
                 }
             }
         }
@@ -299,7 +306,7 @@ namespace MylanCustomizations
                         var fieldNameModified = fieldName.ToString().Replace("_x", "");
                         fieldNameModified = fieldName.ToString().Replace("_", "");
 
-                        if (fieldNameModified.ToLower() != "created" && fieldNameModified.ToLower() != "updated" && fieldNameModified.ToLower() != "revision")
+                        if (fieldNameModified.ToLower() != "created" && fieldNameModified.ToLower() != "sortorder" && fieldNameModified.ToLower() != "updated" && fieldNameModified.ToLower() != "revision")
                         {
                             SaveItemHistoryDetails(changeId, fieldName, originalItem.Fields[fieldName].Value.ToString(), newItem.Fields[fieldName].Value.ToString());
                         }
